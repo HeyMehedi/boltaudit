@@ -5,14 +5,14 @@ defined( 'ABSPATH' ) || exit;
 use BoltAudit\WpMVC\App;
 
 /**
- * Plugin Name:       BoltAudit
- * Description:       This plugin is build with WpMVC framework
- * Version:           1.0.0
+ * Plugin Name:       BoltAudit – Performance Audit Advisor
+ * Description:       Get a clear, no-risk performance review of your WordPress site. BoltAudit scans for common slowdowns and gives smart, easy-to-follow suggestions — without touching your site or installing bloat.
+ * Version:           0.0.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Tested up to:      6.2
- * Author:            WpMVC
- * Author URI:        http://github.com/wpmvc
+ * Tested up to:      6.8
+ * Author:            HeyMehedi
+ * Author URI:        https://heymehedi.com
  * License:           GPL v3 or later
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       boltaudit
@@ -22,37 +22,37 @@ use BoltAudit\WpMVC\App;
 require_once __DIR__ . '/vendor/vendor-src/autoload.php';
 require_once __DIR__ . '/app/Helpers/helper.php';
 
-final class BoltAudit
-{
-    public static BoltAudit $instance;
+final class BoltAudit {
+	public static BoltAudit $instance;
 
-    public static function instance(): BoltAudit {
-        if ( empty( self::$instance ) ) {
-            self::$instance = new self;
-        }
-        return self::$instance;
-    }
+	public static function instance(): BoltAudit {
+		if ( empty( self::$instance ) ) {
+			self::$instance = new self;
+		}
 
-    public function load() {
-        $application = App::instance();
+		return self::$instance;
+	}
 
-        $application->boot( __FILE__, __DIR__ );
+	public function load() {
+		$application = App::instance();
 
-        /**
-         * Fires once activated plugins have loaded.
-         *
-         */
-        add_action(
-            'plugins_loaded', function () use ( $application ): void {
+		$application->boot( __FILE__, __DIR__ );
 
-                do_action( 'before_load_boltaudit' );
+		/**
+		 * Fires once activated plugins have loaded.
+		 *
+		 */
+		add_action(
+			'plugins_loaded', function () use ( $application ): void {
 
-                $application->load();
+				do_action( 'boltaudit_before_load' );
 
-                do_action( 'after_load_boltaudit' );
-            }
-        );
-    }
+				$application->load();
+
+				do_action( 'boltaudit_after_load' );
+			}
+		);
+	}
 }
 
 BoltAudit::instance()->load();

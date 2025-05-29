@@ -68,7 +68,7 @@ return [
     /**
      * The database option key for storing migration information.
      */
-    'migration_db_option_key'     => 'boltaudit_migrations',
+    // 'migration_db_option_key'     => 'boltaudit_migrations',
 
     /**
      * List of migrations for the plugin.
