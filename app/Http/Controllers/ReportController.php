@@ -3,6 +3,7 @@
 namespace BoltAudit\App\Http\Controllers;
 
 use BoltAudit\App\Repositories\EnvironmentRepository;
+use BoltAudit\App\Repositories\PluginsRepository;
 use BoltAudit\App\Repositories\PostsRepository;
 use BoltAudit\WpMVC\RequestValidator\Validator;
 use BoltAudit\WpMVC\Routing\Response;
@@ -14,6 +15,7 @@ class ReportController extends Controller {
 	private array $types = [
 		'environment',
 		'posts',
+		'plugins',
 	];
 
 	public function index( Validator $validator, WP_REST_Request $wp_rest_request ) {
@@ -40,6 +42,15 @@ class ReportController extends Controller {
 					$response = EnvironmentRepository::get_all();
 					break;
 				case 'posts':
+					$response = PostsRepository::get_all();
+					break;
+				case 'plugins':
+					$response = PluginsRepository::get_all();
+					break;
+				case 'themes':
+					$response = PostsRepository::get_all();
+					break;
+				case 'woocommerce':
 					$response = PostsRepository::get_all();
 					break;
 			}
