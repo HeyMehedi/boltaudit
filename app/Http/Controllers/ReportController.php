@@ -11,41 +11,45 @@ use WP_REST_Request;
 
 class ReportController extends Controller {
 
-	public function environment( Validator $validator, WP_REST_Request $wp_rest_request ) {
+	private array $types = [
+		'environment',
+		'posts',
+	];
+
+	public function index( Validator $validator, WP_REST_Request $wp_rest_request ) {
 		$validator->validate(
 			[
-				'type' => 'string|accepted:+,-',
+				'type' => 'string|required',
 			]
 		);
 
-		try {
-			return Response::send(
-				EnvironmentRepository::get_all(),
-			);
-		} catch ( Exception $e ) {
+		$type = $wp_rest_request->get_param( 'type' );
+
+		if ( ! in_array( $type, $this->types ) ) {
 			return Response::send(
 				[
-					'messages' => esc_html__( 'Could\'t found the enviroments', 'formgent' ),
+					'messages' => esc_html__( 'Invalid type', 'boltaudit' ),
 				], 422
 			);
 		}
-	}
-
-	public function posts( Validator $validator, WP_REST_Request $wp_rest_request ) {
-		$validator->validate(
-			[
-				'type' => 'string|accepted:+,-',
-			]
-		);
 
 		try {
-			return Response::send(
-				PostsRepository::get_all(),
-			);
+
+			switch ( $type ) {
+				case 'environment':
+					$response = EnvironmentRepository::get_all();
+					break;
+				case 'posts':
+					$response = PostsRepository::get_all();
+					break;
+			}
+
+			return Response::send( $response );
+
 		} catch ( Exception $e ) {
 			return Response::send(
 				[
-					'messages' => esc_html__( 'Could\'t found the posts', 'formgent' ),
+					'messages' => $e->getMessage(),
 				], 422
 			);
 		}

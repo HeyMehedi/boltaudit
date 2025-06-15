@@ -1,1 +1,0 @@
-alert('Hello WP, Are you ready for big changes?');
