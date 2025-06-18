@@ -2,6 +2,7 @@
 
 namespace BoltAudit\App\Http\Controllers;
 
+use BoltAudit\App\Repositories\DatabaseRepository;
 use BoltAudit\App\Repositories\EnvironmentRepository;
 use BoltAudit\App\Repositories\PluginsRepository;
 use BoltAudit\App\Repositories\PostsRepository;
@@ -16,6 +17,7 @@ class ReportController extends Controller {
 		'environment',
 		'posts',
 		'plugins',
+		'database',
 	];
 
 	public function index( Validator $validator, WP_REST_Request $wp_rest_request ) {
@@ -40,6 +42,9 @@ class ReportController extends Controller {
 			switch ( $type ) {
 				case 'environment':
 					$response = EnvironmentRepository::get_all();
+					break;
+				case 'database':
+					$response = DatabaseRepository::get_all();
 					break;
 				case 'posts':
 					$response = PostsRepository::get_all();
