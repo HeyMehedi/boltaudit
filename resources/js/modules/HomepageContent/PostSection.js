@@ -1,0 +1,133 @@
+import ContentLoading from "@components/ContentLoading";
+import CountUp from "@components/CountUp";
+import postData from "@helper/postData";
+import { useEffect, useState } from "@wordpress/element";
+
+export default function PostSection() {
+  const [dataFetched, setDataFetched] = useState(false);
+  const [allData, setAllData] = useState(null);
+
+  useEffect(() => {
+    postData("boltaudit/reports/posts").then((res) => {
+      const data = res;
+      // console.log("Post Data", { data });
+
+      setAllData(data);
+      setDataFetched(true);
+    });
+  }, []);
+
+  const postType = dataFetched
+    ? Object.keys(allData.post_types).reduce((acc, key) => {
+        acc[key] = {
+          totalType: allData.total_posts || 0,
+          countType: allData.post_types[key] || 0,
+          totalMeta: allData.post_meta_total || 0,
+          countMeta: allData.post_meta_by_type[key] || 0,
+        };
+        return acc;
+      }, {})
+    : null;
+
+  return dataFetched ? (
+    <div id="ba-dashboard__post" className="ba-dashboard__content__section">
+      <h4 className="ba-dashboard__content__section__title">Post Type & Metadata Overview</h4>
+      <p className="ba-dashboard__content__section__desc">
+        See how many posts, pages, and custom content types your site has—plus how much metadata is attached.<br/>
+        Quickly spot unused or bloated content types that may be slowing things down.
+      </p>
+      {/* <a
+        href="#"
+        className="ba-dashboard__content__section__btn ba-dashboard__btn"
+      >
+        Security analytics documentation
+      </a> */}
+      <div className="ba-dashboard__content__section__content">
+        <div className="ba-dashboard__content__section__overview">
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Total
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={allData.total_posts} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Types
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={allData.post_meta_by_type.page} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Meta
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={allData.post_meta_total} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Revisions
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={allData.revisions} />
+            </span>
+          </div>
+        </div>
+        <div className="ba-dashboard__content__section__data">
+          <table className="ba-dashboard__content__section__data__post">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Total</th>
+                <th>Meta</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(postType).map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key.charAt(0).toUpperCase() + key.slice(1)}</td>
+                  <td>
+                    <span className="data-wrapper">
+                      <span className="data-count">{value.countType}</span>
+                      <span className="data-progress-wrapper">
+                        <span
+                          className="data-progress"
+                          style={{
+                            width: `${
+                              (value.countType * 100) / value.totalType
+                            }%`,
+                          }}
+                        ></span>
+                      </span>
+                    </span>
+                  </td>
+                  <td>
+                    <span className="data-wrapper">
+                      <span className="data-count">{value.countMeta}</span>
+                      <span className="data-progress-wrapper">
+                        <span
+                          className="data-progress"
+                          style={{
+                            width: `${
+                              (value.countMeta * 100) / value.totalMeta
+                            }%`,
+                          }}
+                        ></span>
+                      </span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <ContentLoading />
+  );
+}

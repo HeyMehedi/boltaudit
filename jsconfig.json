@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["resources-/js/components/*"],
+      "@modules/*": ["resources-/js/modules/*"],
+      "@layout/*": ["resources-/js/layout/*"],
+      "@helper/*": ["resources-/js/helper/*"],
+      "@hooks/*": ["resources-/js/hooks/*"],
+      "@store/*": ["resources-/js/store/*"],
+      "@root/style": ["resources-/js/style.js"]
+    }
+  },
+  "exclude": [".git", "app", "node_modules", "vendor", "vendor-src"]
+}

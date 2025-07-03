@@ -1,0 +1,64 @@
+// Tab
+.ba-dashboard__tab {
+  display: flex;
+  flex-direction: column;
+  &__list {
+    display: flex;
+    gap: 24px;
+  }
+  &__top {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 24px;
+  }
+  &__item {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ba-dashboard-title-color);
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    svg path {
+      fill: var(--ba-dashboard-title-color);
+    }
+    &.active {
+      border-color: var(--ba-dashboard-primary-color);
+    }
+  }
+  &__content {
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+    &__single {
+      display: flex;
+      gap: 20px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--ba-dashboard-section-border-color);
+      &__title {
+        width: 150px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        margin: 2px 0 0;
+        color: var(--ba-dashboard-dark-color);
+      }
+      &__value {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.6;
+        color: var(--ba-dashboard-body-color);
+        a {
+          color: var(--ba-dashboard-primary-color);
+        }
+      }
+    }
+  }
+}

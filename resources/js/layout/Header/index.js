@@ -1,0 +1,138 @@
+import { useEffect, useRef, useState } from "@wordpress/element";
+import { Link } from "react-router-dom";
+
+// Import Images
+import { checkedClickedOutside } from "@helper/checkClickedOutside";
+import Logo from "@images/logo.svg";
+
+const Header = (props) => {
+  const [activeDropdown, setActiveDropdown] = useState(false);
+
+  function handleDropdown(item) {
+    if (item === activeDropdown) {
+      setActiveDropdown(null);
+    } else {
+      setActiveDropdown(item);
+    }
+  }
+
+  const dropdownRefs = {
+    support: useRef(null),
+    add: useRef(null),
+  };
+
+  useEffect(() => {
+    return checkedClickedOutside(
+      activeDropdown,
+      setActiveDropdown,
+      dropdownRefs
+    );
+  }, [activeDropdown]);
+
+  return (
+    <header className="ba-dashboard__header">
+      <Link to="/" className="ba-dashboard__header__logo">
+        <img
+          className="ba-dashboard__header__logo__img"
+          src={Logo}
+          alt="Logo"
+        />
+      </Link>
+      <div className="ba-dashboard__header__content">
+        {/* <div className="ba-dashboard__header__action">
+          <div
+            className="ba-dashboard__header__action__wrapper"
+            ref={dropdownRefs.support}
+          >
+            <button
+              className={`ba-dashboard__header__action__btn ${
+                activeDropdown === "support" ? "active" : ""
+              }`}
+              onClick={() => handleDropdown("support")}
+            >
+              Support
+              <ReactSVG src={actionIcon} width={20} height={20} />
+            </button>
+            {activeDropdown === "support" && (
+              <ul className="ba-dashboard__header__action__dropdown">
+                <li className="ba-dashboard__header__action__item">
+                  <NavLink
+                    activeclassname="active"
+                    to="/about"
+                    className="ba-dashboard__header__action__link"
+                  >
+                    About Us
+                  </NavLink>
+                </li>
+                <li className="ba-dashboard__header__action__item">
+                  <NavLink
+                    activeclassname="active"
+                    to="/contact"
+                    className="ba-dashboard__header__action__link"
+                  >
+                    Contact Us
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </div>
+
+          <div
+            className="ba-dashboard__header__action__wrapper"
+            ref={dropdownRefs.add}
+          >
+            <button
+              className={`ba-dashboard__header__action__btn ${
+                activeDropdown === "add" ? "active" : ""
+              }`}
+              onClick={() => handleDropdown("add")}
+            >
+              Add
+              <ReactSVG src={actionIcon} width={20} height={20} />
+            </button>
+            {activeDropdown === "add" && (
+              <ul className="ba-dashboard__header__action__dropdown">
+                <li className="ba-dashboard__header__action__item">
+                  <NavLink
+                    activeclassname="active"
+                    to="/add-page"
+                    className="ba-dashboard__header__action__link"
+                  >
+                    Add Page
+                  </NavLink>
+                </li>
+                <li className="ba-dashboard__header__action__item">
+                  <NavLink
+                    activeclassname="active"
+                    to="/add-post"
+                    className="ba-dashboard__header__action__link"
+                  >
+                    Add Post
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div className="ba-dashboard__header__info">
+          <img
+            className="ba-dashboard__header__info__avatar"
+            src={Avatar}
+            alt="Avatar"
+          />
+          <div className="ba-dashboard__header__info__content">
+            <span className="ba-dashboard__header__info__title">
+              Mehedi Hasan
+            </span>
+            <span className="ba-dashboard__header__info__subtitle">
+              info@heymehedi.com
+            </span>
+          </div>
+        </div> */}
+      </div>
+    </header>
+  );
+};
+
+export default Header;

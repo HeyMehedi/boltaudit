@@ -33,5 +33,19 @@
 		"grunt-contrib-clean": "^2.0.1",
 		"grunt-wp-i18n": "^1.0.3",
 		"load-grunt-tasks": "^5.1.0"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.25.0",
+		"@wordpress/components": "^29.11.0",
+		"@wordpress/data": "^10.25.0",
+		"@wordpress/element": "^6.25.0",
+		"@wordpress/hooks": "^4.25.0",
+		"@wordpress/i18n": "^5.25.0",
+		"apexcharts": "^4.7.0",
+		"react-apexcharts": "^1.7.0",
+		"react-inlinesvg": "^4.2.0",
+		"react-paginate": "^8.3.0",
+		"react-router-dom": "^7.6.2",
+		"styled-components": "^6.1.18"
 	}
 }

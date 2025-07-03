@@ -1,7 +1,19 @@
-#ba-dashboard-app {
-	.loading {
-		font-size: 50px;
-		text-align: center;
-		padding-top: 40vh;
-	}
+@import "variables";
+@import "font-face";
+@import "global";
+@import "header";
+@import "sidebar";
+@import "footer";
+@import "content";
+@import "button";
+@import "tab";
+@import "chart";
+
+.ba-menu-page-wrapper {
+  margin-left: -20px;
+  background: #fff;
+}
+
+.ba-dashboard__wrapper {
+  display: flex;
 }

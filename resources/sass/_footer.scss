@@ -1,0 +1,19 @@
+// Footer
+.ba-dashboard__content__footer {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--ba-dashboard-border-color);
+  &__logo {
+    height: 25px;
+  }
+  &__contact {
+    color: var(--ba-dashboard-body-color);
+    text-decoration: none;
+    &:hover {
+      color: var(--ba-dashboard-primary-color);
+    }
+  }
+}

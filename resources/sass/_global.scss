@@ -1,0 +1,139 @@
+body {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--ba-dashboard-body-color);
+  font-family: var(--ba-dashboard-font-family);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+button {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
+
+.text-primary {
+  color: var(--ba-dashboard-primary-color) !important;
+}
+
+.text-dark {
+  color: var(--ba-dashboard-dark-color) !important;
+}
+
+.text-white {
+  color: var(--ba-dashboard-white-color) !important;
+}
+
+.text-success {
+  color: var(--ba-dashboard-success-color) !important;
+}
+
+.text-warning {
+  color: var(--ba-dashboard-warning-color) !important;
+}
+
+.text-danger {
+  color: var(--ba-dashboard-danger-color) !important;
+}
+
+.text-body {
+  color: var(--ba-dashboard-body-color) !important;
+}
+
+.normal {
+  font-weight: 400 !important;
+}
+
+.medium {
+  font-weight: 500 !important;
+}
+
+.semi-bold {
+  font-weight: 600 !important;
+}
+
+.bold {
+  font-weight: 700 !important;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+// Tooltip CSS
+.bs-dashboard-tooltip {
+  position: relative;
+  &:hover {
+    svg path {
+      fill: var(--ba-dashboard-primary-color);
+    }
+    .bs-dashboard-tooltip-content {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+.bs-dashboard-tooltip-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: max-content;
+  color: var(--ba-dashboard-white-color);
+  background: var(--ba-dashboard-dark-color);
+  padding: 3px 7px;
+  border-radius: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all ease 0.3s;
+  &:before {
+    content: "";
+    position: absolute;
+    border-bottom: 6px solid var(--ba-dashboard-dark-color);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    bottom: 100%;
+    left: 4px;
+  }
+}
+
+// Toolbar CSS
+.ba-dashboard__toolbar {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}

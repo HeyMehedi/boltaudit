@@ -1,0 +1,29 @@
+// Button
+.ba-dashboard__btn {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  height: 35px;
+  padding: 0 24px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ba-dashboard-primary-color);
+  text-decoration: none;
+  border: 1px solid var(--ba-dashboard-primary-color);
+  transition: all ease 0.3s;
+  &:hover {
+    color: var(--ba-dashboard-white-color);
+    background-color: var(--ba-dashboard-primary-color);
+  }
+  &--sm {
+    padding: 0 16px;
+    border-radius: 6px;
+  }
+  &--primary {
+    color: var(--ba-dashboard-white-color);
+    background-color: var(--ba-dashboard-primary-color);
+    border-color: var(--ba-dashboard-primary-color);
+  }
+}
