@@ -14,3 +14,6 @@ phpcs-report.xml
 /assets/css/*.js
 yarn.lock
 composer.lock
+__build
+assets
+notes.txt

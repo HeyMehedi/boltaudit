@@ -146,7 +146,6 @@
           }
           &:first-child {
             text-align: left;
-            font-weight: 600;
           }
           &:last-child {
             text-align: right;
@@ -155,7 +154,7 @@
       }
       &__post {
         th {
-          font-size: 20px !important;
+          font-size: 16px !important;
           color: var(--ba-dashboard-dark-color) !important;
           padding: 0 !important;
           background: transparent !important;

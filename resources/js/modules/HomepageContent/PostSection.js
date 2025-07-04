@@ -46,7 +46,15 @@ export default function PostSection() {
         <div className="ba-dashboard__content__section__overview">
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">
-              Total
+              Post Types
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={Object.keys(allData.post_types).length - 1} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Total Items
             </span>
             <span className="ba-dashboard__content__section__overview__count">
               <CountUp target={allData.total_posts} />
@@ -54,15 +62,7 @@ export default function PostSection() {
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">
-              Types
-            </span>
-            <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={allData.post_meta_by_type.page} />
-            </span>
-          </div>
-          <div className="ba-dashboard__content__section__overview__single">
-            <span className="ba-dashboard__content__section__overview__title">
-              Meta
+              Total Meta
             </span>
             <span className="ba-dashboard__content__section__overview__count">
               <CountUp target={allData.post_meta_total} />
@@ -81,9 +81,9 @@ export default function PostSection() {
           <table className="ba-dashboard__content__section__data__post">
             <thead>
               <tr>
-                <th>Type</th>
-                <th>Total</th>
-                <th>Meta</th>
+                <th>Post Type</th>
+                <th>Total Items</th>
+                <th>Total Meta</th>
               </tr>
             </thead>
             <tbody>
