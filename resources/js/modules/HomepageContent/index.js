@@ -1,5 +1,6 @@
 import ContentLoading from "@components/ContentLoading";
 import { lazy, Suspense } from "@wordpress/element";
+import DatabaseSection from "./DatabaseSection";
 
 const OverviewSection = lazy(() => import("./OverviewSection"));
 const RecommendationSection = lazy(() => import("./RecommendationSection"));
@@ -24,6 +25,9 @@ export default function HomepageContentModule() {
       <Suspense fallback={<ContentLoading />}>
         <ThemeSection />
       </Suspense> */}
+      <Suspense fallback={<ContentLoading />}>
+        <DatabaseSection />
+      </Suspense>
       <Suspense fallback={<ContentLoading />}>
         <PostSection />
       </Suspense>
