@@ -26,10 +26,10 @@ export default function HomepageContentModule() {
         <ThemeSection />
       </Suspense> */}
       <Suspense fallback={<ContentLoading />}>
-        <DatabaseSection />
+        <PostSection />
       </Suspense>
       <Suspense fallback={<ContentLoading />}>
-        <PostSection />
+        <DatabaseSection />
       </Suspense>
       {/* <Suspense fallback={<ContentLoading />}>
         <WoocommerceSection />

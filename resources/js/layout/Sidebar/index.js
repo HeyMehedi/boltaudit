@@ -9,6 +9,10 @@ const sections = [
     name: "Post",
   },
   {
+    id: "ba-dashboard__database",
+    name: "Database",
+  },
+  {
     id: "ba-dashboard__environment",
     name: "Environment",
   },
