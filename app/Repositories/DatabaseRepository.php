@@ -13,7 +13,7 @@ class DatabaseRepository {
 			return self::$table_stats;
 		}
 
-		self::$table_stats = $wpdb->get_results(
+		$raw_tables = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
 					TABLE_NAME AS table_name,
@@ -28,6 +28,15 @@ class DatabaseRepository {
 			),
 			ARRAY_A
 		);
+
+		// Format sizes for human readability
+		self::$table_stats = array_map( function ( $table ) {
+			$table['data_size_formatted']  = size_format( $table['data_size'], 2 );
+			$table['index_size_formatted'] = size_format( $table['index_size'], 2 );
+			$table['total_size_formatted'] = size_format( $table['total_size'], 2 );
+
+			return $table;
+		}, $raw_tables );
 
 		return self::$table_stats;
 	}
@@ -63,7 +72,7 @@ class DatabaseRepository {
 		];
 	}
 
-	public static function get_largest_tables( $limit = 5 ) {
+	public static function get_largest_tables( $limit = 10 ) {
 		$tables = self::get_table_stats();
 
 		usort( $tables, function ( $a, $b ) {
@@ -125,17 +134,21 @@ class DatabaseRepository {
 	}
 
 	public static function get_all() {
-		$table_stats = self::get_table_stats(); // fetched once, cached
+		$table_stats   = self::get_table_stats(); // fetched once, cached
+		$empty_tables  = self::get_empty_tables();
+		$larget_tables = self::get_largest_tables();
 
 		return [
-			'tables'           => $table_stats,
-			'largest'          => self::get_largest_tables(), // reuses cached
-			'options'          => self::get_option_counts(),
-			'engine_summary'   => self::get_engine_summary(),
-			'empty_tables'     => self::get_empty_tables(),
-			'db_size'          => self::get_total_db_size(),
-			'index_efficiency' => self::get_index_efficiency(),
-			'heavy_autoloaded' => self::get_heavy_autoloaded_options(),
+			'tables'             => $table_stats,
+			'total_tables'       => count( $table_stats ),
+			'empty_tables'       => $empty_tables,
+			'total_empty_tables' => count( $empty_tables ),
+			'largest_tables'     => $larget_tables,
+			'options'            => self::get_option_counts(),
+			'engine_summary'     => self::get_engine_summary(),
+			'db_size'            => self::get_total_db_size(),
+			'index_efficiency'   => self::get_index_efficiency(),
+			'heavy_autoloaded'   => self::get_heavy_autoloaded_options(),
 		];
 	}
 }
