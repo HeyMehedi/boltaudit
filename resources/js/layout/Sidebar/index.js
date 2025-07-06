@@ -6,7 +6,7 @@ import menuIcon from "@icon/reader.svg";
 const sections = [
   {
     id: "ba-dashboard__post",
-    name: "Post",
+    name: "Post Type",
   },
   {
     id: "ba-dashboard__database",

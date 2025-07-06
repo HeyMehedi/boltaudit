@@ -4,6 +4,7 @@
   gap: 32px;
   padding: 40px 32px;
   box-sizing: border-box;
+  background: #f0f0f1;
   &__wrapper {
     display: flex;
     gap: 48px;
@@ -15,6 +16,7 @@
     border-radius: 12px;
     box-sizing: border-box;
     box-shadow: var(--ba-dashboard-section-box-shadow);
+    background: #fff;
     &__top {
       display: flex;
       gap: 24px;
@@ -83,8 +85,8 @@
         color: var(--ba-dashboard-title-color);
       }
       &__count {
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 600;
         line-height: 1.2;
         color: var(--ba-dashboard-dark-color);
       }

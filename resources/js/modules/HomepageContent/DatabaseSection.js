@@ -16,8 +16,7 @@ export default function DatabaseSection() {
       setDataFetched(true);
     });
   }, []);
-
-  console.log(' allData: ', allData );
+  
   const largestTables = dataFetched
     ? Object.keys(allData.largest_tables).reduce((acc, key) => {
         acc[key] = {
