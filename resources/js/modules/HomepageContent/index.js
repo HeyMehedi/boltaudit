@@ -4,7 +4,7 @@ import DatabaseSection from "./DatabaseSection";
 
 const OverviewSection = lazy(() => import("./OverviewSection"));
 const RecommendationSection = lazy(() => import("./RecommendationSection"));
-const PluginSection = lazy(() => import("./PluginSection"));
+const PluginsSection = lazy(() => import("./PluginsSection"));
 const ThemeSection = lazy(() => import("./ThemeSection"));
 const PostSection = lazy(() => import("./PostSection"));
 const WoocommerceSection = lazy(() => import("./WoocommerceSection"));
@@ -19,10 +19,7 @@ export default function HomepageContentModule() {
       {/* <Suspense fallback={<ContentLoading />}>
         <RecommendationSection />
       </Suspense> */}
-      {/* <Suspense fallback={<ContentLoading />}>
-        <PluginSection />
-      </Suspense>
-      <Suspense fallback={<ContentLoading />}>
+      {/*<Suspense fallback={<ContentLoading />}>
         <ThemeSection />
       </Suspense> */}
       <Suspense fallback={<ContentLoading />}>
@@ -30,6 +27,9 @@ export default function HomepageContentModule() {
       </Suspense>
       <Suspense fallback={<ContentLoading />}>
         <DatabaseSection />
+      </Suspense>
+      <Suspense fallback={<ContentLoading />}>
+        <PluginsSection />
       </Suspense>
       {/* <Suspense fallback={<ContentLoading />}>
         <WoocommerceSection />

@@ -22,6 +22,7 @@ class PluginsRepository {
 		$all_plugins    = get_plugins();
 		$plugin_updates = get_plugin_updates();
 		$plugins_data   = [];
+		$active_plugins = get_option( 'active_plugins', [] );
 
 		foreach ( $all_plugins as $plugin_file => $plugin_data ) {
 			$slug        = dirname( $plugin_file );
@@ -37,6 +38,7 @@ class PluginsRepository {
 				'plugin_file'   => $plugin_file,
 				'needs_upgrade' => isset( $plugin_updates[$plugin_file] ),
 				'is_wp_repo'    => $is_wp_repo,
+				'is_active'     => in_array( $plugin_file, $active_plugins ),
 				'last_updated'  => $last_updated,
 				'is_abandoned'  => $is_abandoned,
 			];

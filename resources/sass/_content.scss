@@ -74,7 +74,7 @@
         background-color: var(--ba-dashboard-section-bg-color);
         border-radius: 8px;
         flex: 0 0 25%;
-        max-width: 22%;
+        max-width: 22.91%;
         box-sizing: border-box;
       }
       &__title {
@@ -145,11 +145,20 @@
           text-align: center;
           color: var(--ba-dashboard-dark-color);
           border: 1px solid var(--ba-dashboard-section-border-color);
+          &.plugin-name {
+            display: flex;
+            align-items: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+          }
           a {
             display: flex;
             gap: 2px;
             align-items: center;
             color: var(--ba-dashboard-primary-color);
+            &.action {
+              justify-content: end;
+            }
           }
           &:first-child {
             text-align: left;

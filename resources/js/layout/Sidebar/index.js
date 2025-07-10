@@ -6,11 +6,15 @@ import menuIcon from "@icon/reader.svg";
 const sections = [
   {
     id: "ba-dashboard__post",
-    name: "Post Type",
+    name: "Post Types",
   },
   {
     id: "ba-dashboard__database",
     name: "Database",
+  },
+  {
+    id: "ba-dashboard__plugins",
+    name: "Plugins",
   },
   {
     id: "ba-dashboard__environment",
