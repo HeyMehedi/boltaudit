@@ -84,7 +84,7 @@ class PluginsRepository {
 	public static function get_counts() {
 		$data      = self::get_plugins_data();
 		$total     = count( $data );
-		$active    = count( array_filter( $data, fn( $p ) => ! $p['is_wp_repo'] || in_array( $p['slug'], get_option( 'active_plugins', [] ) ) ) );
+		$active    = count( get_option( 'active_plugins', [] ) );
 		$inactive  = $total - $active;
 		$abandoned = count( array_filter( $data, fn( $p ) => $p['is_abandoned'] ) );
 
