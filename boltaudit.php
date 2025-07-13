@@ -34,6 +34,8 @@ final class BoltAudit {
 	}
 
 	public function load() {
+		register_activation_hook( __FILE__, [$this, 'on_activation'] );
+
 		$application = App::instance();
 
 		$application->boot( __FILE__, __DIR__ );
@@ -52,6 +54,10 @@ final class BoltAudit {
 				do_action( 'boltaudit_after_load' );
 			}
 		);
+	}
+
+	public function on_activation(): void {
+		new BoltAudit\App\Setup\Activation();
 	}
 }
 

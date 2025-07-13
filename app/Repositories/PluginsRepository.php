@@ -2,6 +2,8 @@
 
 namespace BoltAudit\App\Repositories;
 
+use BoltAudit\App\Repositories\OptionsRepository;
+
 class PluginsRepository {
 
 	protected static $cached_plugins_data = null;
@@ -25,14 +27,22 @@ class PluginsRepository {
 		$active_plugins = get_option( 'active_plugins', [] );
 
 		foreach ( $all_plugins as $plugin_file => $plugin_data ) {
-			$slug        = dirname( $plugin_file );
-			$wp_org_info = self::fetch_wp_org_info( $slug );
+			$slug         = dirname( $plugin_file );
+			$version      = $plugin_data['Version'] ?? 'unknown';
+			$option_key   = "plugin_data_{$slug}_v{$version}";
+			$cached_entry = OptionsRepository::get_option( $option_key, 'plugins_cache' );
 
+			if ( $cached_entry && ! empty( $cached_entry['data'] ) ) {
+				$plugins_data[] = json_decode( $cached_entry['data'], true );
+				continue;
+			}
+
+			$wp_org_info  = self::fetch_wp_org_info( $slug );
 			$is_wp_repo   = ! empty( $wp_org_info ) && ! is_wp_error( $wp_org_info );
 			$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
 			$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
 
-			$plugins_data[] = [
+			$data = [
 				'name'          => $plugin_data['Name'] ?? '',
 				'slug'          => $slug,
 				'plugin_file'   => $plugin_file,
@@ -41,7 +51,11 @@ class PluginsRepository {
 				'is_active'     => in_array( $plugin_file, $active_plugins ),
 				'last_updated'  => $last_updated,
 				'is_abandoned'  => $is_abandoned,
+				'version'       => $version,
 			];
+
+			OptionsRepository::create_option( $option_key, 'plugins_cache', $data );
+			$plugins_data[] = $data;
 		}
 
 		self::$cached_plugins_data = $plugins_data;
@@ -78,7 +92,7 @@ class PluginsRepository {
 			return false;
 		}
 
-		return ( time() - $then ) > YEAR_IN_SECONDS; // Consider abandoned if not updated in 1 year
+		return ( time() - $then ) > YEAR_IN_SECONDS;
 	}
 
 	public static function get_counts() {
@@ -108,7 +122,6 @@ class PluginsRepository {
 		$active_plugins   = $counts['active'] ?? 0;
 		$inactive_plugins = $total_plugins - $active_plugins;
 
-		// Suggest update
 		if ( ! empty( $plugins_needing_update ) ) {
 			$suggestions[] = sprintf(
 				"%d plugin(s) need updates. Keeping plugins updated improves performance and security.",
@@ -116,7 +129,6 @@ class PluginsRepository {
 			);
 		}
 
-		// Suggest removing abandoned plugins
 		if ( ! empty( $abandoned_plugins ) ) {
 			$suggestions[] = sprintf(
 				"%d plugin(s) appear abandoned (not updated in 1+ year). Consider replacing or removing them.",
@@ -124,12 +136,10 @@ class PluginsRepository {
 			);
 		}
 
-		// Suggest reducing plugin count
 		if ( $total_plugins > 30 ) {
 			$suggestions[] = "You have over 30 plugins installed. Consider trimming unused ones to reduce overhead.";
 		}
 
-		// Suggest reviewing inactive plugins
 		if ( $inactive_plugins > 5 ) {
 			$suggestions[] = sprintf(
 				"You have %d inactive plugin(s). Inactive plugins still load in admin — consider removing them.",
@@ -137,9 +147,8 @@ class PluginsRepository {
 			);
 		}
 
-		// If no issues found
 		if ( empty( $suggestions ) ) {
-			$suggestions[] = "All good! Your plugin setup looks clean and up-to-date. ✅";
+			$suggestions[] = "All good! Your plugin setup looks clean and up-to-date.";
 		}
 
 		return $suggestions;
