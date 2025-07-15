@@ -49,16 +49,16 @@ class ReportController extends Controller {
 				case 'posts':
 					$response = PostsRepository::get_all();
 					break;
-                                case 'plugins':
-                                        $page     = (int) $wp_rest_request->get_param( 'page' ) ?: 1;
-                                        $per_page = (int) $wp_rest_request->get_param( 'per_page' ) ?: 20;
+				case 'plugins':
+					$page     = (int) $wp_rest_request->get_param( 'page' ) ?? 1;
+					$per_page = (int) $wp_rest_request->get_param( 'per_page' ) ?? 10;
 
-                                        if ( $page > 0 && $per_page > 0 ) {
-                                                $response = PluginsRepository::get_paginated( $page, $per_page );
-                                        } else {
-                                                $response = PluginsRepository::get_all();
-                                        }
-                                        break;
+					if ( $page > 0 && $per_page > 0 ) {
+						$response = PluginsRepository::get_paginated( $page, $per_page );
+					} else {
+						$response = PluginsRepository::get_all();
+					}
+					break;
 				case 'themes':
 					$response = PostsRepository::get_all();
 					break;

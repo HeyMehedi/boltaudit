@@ -9,7 +9,7 @@ import arrowRightIcon from '@icon/arrow-right.svg';
 import infoIcon from '@icon/info-circled.svg';
 
 export default function PluginsSection() {
-	const perPage = 20;
+	const perPage = 10;
 	const [ plugins, setPlugins ] = useState( [] );
 	const [ counts, setCounts ] = useState( null );
 	const [ total, setTotal ] = useState( null );
@@ -24,11 +24,12 @@ export default function PluginsSection() {
 				page: p,
 				per_page: perPage,
 			} );
+
 			if ( ! res || cancelled ) return;
 
 			setPlugins( ( prev ) => [ ...prev, ...res.plugins ] );
-			setCounts( res.counts );
-			setTotal( res.total_plugins );
+			setCounts( res?.counts ?? 1 );
+			setTotal( res?.total_plugins ?? 1 );
 
 			if ( p * perPage < res.total_plugins ) {
 				setPage( p + 1 );
@@ -83,7 +84,7 @@ export default function PluginsSection() {
 							Total
 						</span>
 						<span className="ba-dashboard__content__section__overview__count">
-							<CountUp target={ pluginData.counts.total } />
+							<CountUp target={ pluginData?.counts.total } />
 						</span>
 					</div>
 					<div className="ba-dashboard__content__section__overview__single">
@@ -91,7 +92,7 @@ export default function PluginsSection() {
 							Active
 						</span>
 						<span className="ba-dashboard__content__section__overview__count">
-							<CountUp target={ pluginData.counts.active } />
+							<CountUp target={ pluginData?.counts.active } />
 						</span>
 					</div>
 					<div className="ba-dashboard__content__section__overview__single">
@@ -99,7 +100,7 @@ export default function PluginsSection() {
 							Inactive
 						</span>
 						<span className="ba-dashboard__content__section__overview__count">
-							<CountUp target={ pluginData.counts.inactive } />
+							<CountUp target={ pluginData?.counts.inactive } />
 						</span>
 					</div>
 					<div className="ba-dashboard__content__section__overview__single">
@@ -107,7 +108,7 @@ export default function PluginsSection() {
 							Abandoned
 						</span>
 						<span className="ba-dashboard__content__section__overview__count">
-							<CountUp target={ pluginData.counts.abandoned } />
+							<CountUp target={ pluginData?.counts.abandoned } />
 						</span>
 					</div>
 				</div>
@@ -133,7 +134,7 @@ export default function PluginsSection() {
 							</tr>
 						</thead>
 						<tbody>
-							{ pluginData.plugins.map( ( plugin, index ) => (
+							{ pluginData?.plugins.map( ( plugin, index ) => (
 								<tr key={ index }>
 									<td className="plugin-name">
 										{ plugin.name }
@@ -148,10 +149,10 @@ export default function PluginsSection() {
 												</span>
 											) }
 											{ /* {plugin.is_wp_repo && (
-                      <span className="plugin-badge community">
-                        Community
-                      </span>
-                    )} */ }
+												<span className="plugin-badge community">
+													Community
+												</span>
+											)} */ }
 											{ plugin.needs_upgrade && (
 												<span className="plugin-badge upgrade">
 													Outdated
