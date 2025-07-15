@@ -144,7 +144,14 @@
           line-height: 1.2;
           text-align: center;
           color: var(--ba-dashboard-dark-color);
-          border: 1px solid var(--ba-dashboard-section-border-color);
+          border-top: 1px solid var(--ba-dashboard-section-border-color);
+          border-bottom: 1px solid var(--ba-dashboard-section-border-color);
+           &:first-child {
+            border-left: 1px solid var(--ba-dashboard-section-border-color);
+          }
+          &:last-child {
+            border-right: 1px solid var(--ba-dashboard-section-border-color);
+          }
           &.plugin-name {
             display: flex;
             align-items: center;
