@@ -24,7 +24,7 @@ class CreateDB implements Migration {
 		$sql = "CREATE TABLE {$table_name} (
         `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         `option_key` VARCHAR(191) NOT NULL,
-        `context` NOT NULL DEFAULT,
+        `context` VARCHAR(191) NOT NULL DEFAULT '',
         `data` JSON DEFAULT NULL,
         `created` DATE NOT NULL,
         `expire` DATE DEFAULT NULL,
