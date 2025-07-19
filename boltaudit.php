@@ -3,6 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 use BoltAudit\WpMVC\App;
+use BoltAudit\App\Console\PluginMetricsCommand;
+use WP_CLI;
 
 /**
  * Plugin Name:       BoltAudit – Performance Audit Advisor
@@ -62,3 +64,7 @@ final class BoltAudit {
 }
 
 BoltAudit::instance()->load();
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+    WP_CLI::add_command( 'boltaudit regenerate plugin-metrics', PluginMetricsCommand::class );
+}
+
