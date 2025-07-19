@@ -13,9 +13,9 @@ const EnvironmentSection = lazy(() => import("./EnvironmentSection"));
 export default function HomepageContentModule() {
   return (
     <>
-      {/* <Suspense fallback={<ContentLoading />}>
+      <Suspense fallback={<ContentLoading />}>
         <OverviewSection />
-      </Suspense> */}
+      </Suspense>
       {/* <Suspense fallback={<ContentLoading />}>
         <RecommendationSection />
       </Suspense> */}

@@ -93,31 +93,31 @@ export default function OverviewSection() {
           </span>
           <div className="ba-dashboard__content__overview__intro">
             <h3 className="ba-dashboard__content__overview__title">
-              heymehedi.com
+              {boltaudit_data.siteName}
             </h3>
             <div className="ba-dashboard__content__overview__badge">
               <span className="ba-dashboard__content__overview__badge__single active">
                 <ReactSVG src={checkIcon} width={16} height={16} />
                 Active
               </span>
-              <span className="ba-dashboard__content__overview__badge__single">
+              {/* <span className="ba-dashboard__content__overview__badge__single">
                 Star
               </span>
               <span className="ba-dashboard__content__overview__badge__single">
                 Free plan
-              </span>
+              </span> */}
             </div>
           </div>
           <p className="ba-dashboard__content__overview__desc">
-            Monitor security and performance for heymehedi.com. Configure
-            products and services from the menu.
+           Perform a one-click audit every day to maintain peak performance and security. <br/>
+           Integrate this plugin into your routine to proactively identify and resolve issues before they impact your users.
           </p>
-          <a
+          {/* <a
             href="#"
             className="ba-dashboard__content__overview__btn ba-dashboard__btn"
           >
-            Review BottAudit Fundamentals
-          </a>
+            Review BoltAudit Fundamentals
+          </a> */}
         </div>
         {/* <div className="ba-dashboard__content__overview__analysis">
           <div className="ba-dashboard__tab">

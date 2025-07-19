@@ -3,7 +3,7 @@ Contributors: boltbrains
 Tags: audit, performance, optimization, database, plugins, security
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 0.0.3
+Stable tag: 0.0.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,12 @@ No. BoltAudit reads data but does not deactivate or delete anything. All actions
 Not in beta, but future releases will offer optional PageSpeed Insights integration.
 
 == Changelog ==
+
+= 0.0.4 – 2025-07-16 =  
+* Added Site Details section
+* Fixed Plugin Audit for too many plugins
+* Improved Table UI
+
 = 0.0.3 – 2025-07-13 =
 * Added full Plugin Audit section to detect inactive, outdated, or abandoned plugins  
 * Warnings for unused or risky plugins  
