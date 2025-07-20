@@ -98,17 +98,43 @@ class PluginMetricsCollector {
 		return $found;
 	}
 
-	public function get_styles_by_plugin(): array {
-		global $wp_styles;
-		$found = [];
-		foreach ( $wp_styles->registered ?? [] as $handle => $data ) {
-			if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
-				$found[] = ['handle' => $handle, 'src' => $data->src];
-			}
-		}
+        public function get_styles_by_plugin(): array {
+                global $wp_styles;
+                $found = [];
+                foreach ( $wp_styles->registered ?? [] as $handle => $data ) {
+                        if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+                                $found[] = ['handle' => $handle, 'src' => $data->src];
+                        }
+                }
 
-		return $found;
-	}
+                return $found;
+        }
+
+       public function get_enqueued_scripts_by_plugin(): array {
+               global $wp_scripts;
+               $found = [];
+               foreach ( $wp_scripts->queue ?? [] as $handle ) {
+                       $data = $wp_scripts->registered[$handle] ?? null;
+                       if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+                               $found[] = ['handle' => $handle, 'src' => $data->src];
+                       }
+               }
+
+               return $found;
+       }
+
+       public function get_enqueued_styles_by_plugin(): array {
+               global $wp_styles;
+               $found = [];
+               foreach ( $wp_styles->queue ?? [] as $handle ) {
+                       $data = $wp_styles->registered[$handle] ?? null;
+                       if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+                               $found[] = ['handle' => $handle, 'src' => $data->src];
+                       }
+               }
+
+               return $found;
+       }
 
 	public function get_registered_post_types(): array {
 		$types = [];
