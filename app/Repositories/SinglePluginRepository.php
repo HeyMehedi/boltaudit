@@ -7,140 +7,135 @@ use BoltAudit\App\Services\PluginMetricsCollector;
 
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Repository for retrieving single plugin performance metrics.
- */
 class SinglePluginRepository {
-       /**
-        * Cached collector instance.
-        *
-        * @var PluginMetricsCollector|null
-        */
-    protected static ?PluginMetricsCollector $collector = null;
 
-    protected static $active_plugins = [];
+	protected static ?PluginMetricsCollector $collector = null;
+	protected static array $active_plugins              = [];
+	protected static array $all_plugins                 = [];
+	protected static array $plugin_updates              = [];
 
-    protected static $plugin_updates = [];
+	protected static function ensure_wp_functions(): void {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 
-       /**
-        * Load WordPress plugin utility functions and cache plugin state.
-        */
-    protected static function ensure_wp_functions(): void {
-        if ( ! function_exists( 'get_plugins' ) ) {
-               require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
+		if ( ! function_exists( 'get_plugin_updates' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/update.php';
+		}
 
-        if ( ! function_exists( 'get_plugin_updates' ) ) {
-                  require_once ABSPATH . 'wp-admin/includes/update.php';
-        }
+		self::$plugin_updates = get_plugin_updates();
+		self::$active_plugins = get_option( 'active_plugins', [] );
+		self::$all_plugins    = get_plugins();
+	}
 
-            self::$plugin_updates = get_plugin_updates();
-            self::$active_plugins = get_option( 'active_plugins', [] );
-    }
+	protected static function get_plugin_key( string $slug, string $version ): string {
+		return "plugin_data_{$slug}_v{$version}";
+	}
 
-    public static function get_plugin_data( $plugin_file, $plugin_data ) {
+	public static function get_basic_plugin_data( string $plugin_file, array $plugin_data ): array {
+		self::ensure_wp_functions();
 
-            // Ensure WordPress plugin helpers are loaded only once.
-            self::ensure_wp_functions();
+		$slug       = dirname( $plugin_file );
+		$version    = $plugin_data['Version'] ?? 'unknown';
+		$option_key = self::get_plugin_key( $slug, $version );
 
-        $slug         = dirname( $plugin_file );
-        $version      = $plugin_data['Version'] ?? 'unknown';
-        $option_key   = "plugin_data_{$slug}_v{$version}";
-        $cached_entry = OptionsRepository::get_option( $option_key, 'plugins_cache' );
+		$cached = OptionsRepository::get_option( $option_key, 'plugin_basic_cache' );
+		if ( $cached && ! empty( $cached['data'] ) ) {
+			return json_decode( $cached['data'], true );
+		}
 
-        if ( $cached_entry && ! empty( $cached_entry['data'] ) ) {
-            return json_decode( $cached_entry['data'], true );
-        }
+		$wp_org_info  = self::fetch_wp_org_info( $slug );
+		$is_wp_repo   = ! empty( $wp_org_info ) && ! is_wp_error( $wp_org_info );
+		$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
+		$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
 
-        $wp_org_info  = self::fetch_wp_org_info( $slug );
-        $is_wp_repo   = ! empty( $wp_org_info ) && ! is_wp_error( $wp_org_info );
-        $last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
-        $is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
+		$data = [
+			'name'          => $plugin_data['Name'] ?? '',
+			'slug'          => $slug,
+			'plugin_file'   => $plugin_file,
+			'needs_upgrade' => isset( self::$plugin_updates[$plugin_file] ),
+			'is_wp_repo'    => $is_wp_repo,
+			'is_active'     => in_array( $plugin_file, self::$active_plugins ),
+			'last_updated'  => $last_updated,
+			'is_abandoned'  => $is_abandoned,
+			'version'       => $version,
+		];
 
-        $data = [
-            'name'          => $plugin_data['Name'] ?? '',
-            'slug'          => $slug,
-            'plugin_file'   => $plugin_file,
-            'needs_upgrade' => isset( $plugin_updates[$plugin_file] ),
-            'is_wp_repo'    => $is_wp_repo,
-            'is_active'     => in_array( $plugin_file, self::$active_plugins ),
-            'last_updated'  => $last_updated,
-            'is_abandoned'  => $is_abandoned,
-            'version'       => $version,
-        ];
+		OptionsRepository::create_option( $option_key, 'plugin_basic_cache', $data );
 
-        OptionsRepository::create_option( $option_key, 'plugins_cache', $data );
+		return $data;
+	}
 
-        return $data;
-    }
+	public static function get_plugin_page_data( string $slug ): array {
+		self::ensure_wp_functions();
 
-    /**
-     * Retrieve metrics for a plugin and cache them in the options table.
-     *
-     * @param string $slug    Plugin slug.
-     * @param string $version Plugin version.
-     * @return array<string,mixed>
-     */
-    public static function get_plugin_page_data( string $slug, string $version ): array {
-        $key    = "plugin_data_{$slug}_v{$version}";
-        $cached = OptionsRepository::get_option( $key, 'plugins_cache' );
+		$resolved = self::resolve_plugin_data_by_slug( $slug );
+		if ( empty( $resolved ) ) {
+			return [
+				'error' => "Plugin not found for slug '{$slug}'",
+			];
+		}
 
-        if ( $cached && ! empty( $cached['data']['hooks'] ) ) {
-            return json_decode( $cached['data'], true );
-        }
+		$plugin_file = $resolved['plugin_file'];
+		$plugin_data = $resolved['plugin_data'];
+		$version     = $plugin_data['Version'] ?? 'unknown';
+		$option_key  = self::get_plugin_key( $slug, $version );
 
-        $collector = self::get_collector();
-        $data      = $collector->collect( $slug );
-        if ( is_array( $cached ) ) {
-            $data = array_merge( $cached, $data );
-        }
+		$plugin_basic  = OptionsRepository::get_option( $option_key, 'plugin_basic_cache' );
+		$plugin_single = OptionsRepository::get_option( $option_key, 'plugin_single_cache' );
 
-        OptionsRepository::create_option( $key, 'plugins_cache', $data );
+		if ( ! $plugin_basic || empty( $plugin_basic['data'] ) ) {
+			$plugin_basic = self::get_basic_plugin_data( $plugin_file, $plugin_data );
+		}
 
-        return $data;
-    }
+		if ( $plugin_single && ! empty( $plugin_single['data'] ) ) {
+			return [
+				'plugin_page'  => json_decode( $plugin_single['data'], true ),
+				'plugin_basic' => is_array( $plugin_basic ) ? $plugin_basic : json_decode( $plugin_basic['data'], true ),
+			];
+		}
 
-    protected static function is_wp_org_plugin( $plugin ) {
-        foreach ( ['PluginURI', 'AuthorURI'] as $key ) {
-            if ( ! empty( $plugin[$key] ) && strpos( $plugin[$key], 'wordpress.org' ) !== false ) {
-                return true;
-            }
-        }
+		$metrics = ( new PluginMetricsCollector() )->run( 'plugin-slug' );
 
-        return false;
-    }
+		OptionsRepository::create_option( $option_key, 'plugin_single_cache', $metrics );
 
-    protected static function fetch_wp_org_info( $slug ) {
-        if ( ! function_exists( 'plugins_api' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-        }
+		return [
+			'plugin_page'  => $metrics,
+			'plugin_basic' => is_array( $plugin_basic ) ? $plugin_basic : json_decode( $plugin_basic['data'], true ),
+		];
+	}
 
-        $info = plugins_api( 'plugin_information', ['slug' => $slug, 'fields' => ['last_updated' => true]] );
-        if ( is_wp_error( $info ) ) {
-            return;
-        }
+	protected static function fetch_wp_org_info( string $slug ) {
+		if ( ! function_exists( 'plugins_api' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+		}
 
-        return $info;
-    }
+		$info = plugins_api( 'plugin_information', [
+			'slug'   => $slug,
+			'fields' => ['last_updated' => true],
+		] );
 
-    protected static function is_abandoned( $last_updated ) {
-        $then = strtotime( $last_updated );
-        if ( ! $then ) {
-            return false;
-        }
+		return is_wp_error( $info ) ? null : $info;
+	}
 
-        return ( time() - $then ) > YEAR_IN_SECONDS;
-    }
+	protected static function is_abandoned( string $last_updated ): bool {
+		$timestamp = strtotime( $last_updated );
 
-    /**
-     * Get or create data collector instance.
-     */
-    protected static function get_collector(): PluginMetricsCollector {
-            // Lazily instantiate the collector when first needed.
-        if ( null === self::$collector ) {
-               self::$collector = new PluginMetricsCollector();
-        }
+		return $timestamp && ( time() - $timestamp ) > YEAR_IN_SECONDS;
+	}
 
-            return self::$collector;
-    }
+	protected static function resolve_plugin_data_by_slug( string $slug ): array {
+		self::ensure_wp_functions();
+
+		foreach ( self::$all_plugins as $plugin_file => $plugin_data ) {
+			if ( dirname( $plugin_file ) === $slug ) {
+				return [
+					'plugin_file' => $plugin_file,
+					'plugin_data' => $plugin_data,
+				];
+			}
+		}
+
+		return [];
+	}
 }
