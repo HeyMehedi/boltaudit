@@ -104,7 +104,7 @@ class PluginMetricsCollector {
 			}
 		}
 
-		return $found;
+		return $this->enrich_asset_metrics( $found );
 	}
 
 	public function get_enqueued_scripts_by_plugin(): array {
@@ -129,7 +129,7 @@ class PluginMetricsCollector {
 			}
 		}
 
-		return $found;
+		return $this->enrich_asset_metrics( $found );
 	}
 
 	public function get_enqueued_styles_by_plugin(): array {
@@ -143,5 +143,33 @@ class PluginMetricsCollector {
 		}
 
 		return $found;
+	}
+
+	protected function enrich_asset_metrics( array $assets ): array {
+		foreach ( $assets as &$asset ) {
+			$full_url = $asset['src'];
+
+			// Only handle full URLs
+			if ( ! filter_var( $full_url, FILTER_VALIDATE_URL ) ) {
+				$asset['load_time_ms'] = null;
+				$asset['size_bytes']   = null;
+				continue;
+			}
+
+			$start    = microtime( true );
+			$response = wp_remote_get( $full_url );
+			$elapsed  = ( microtime( true ) - $start ) * 1000;
+
+			if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+				$asset['load_time_ms'] = null;
+				$asset['size_bytes']   = null;
+				continue;
+			}
+
+			$asset['load_time_ms'] = round( $elapsed, 2 );
+			$asset['size_bytes']   = strlen( wp_remote_retrieve_body( $response ) );
+		}
+
+		return $assets;
 	}
 }
