@@ -19,12 +19,12 @@ class PluginMetricsCollector {
 
 	protected function collect_now(): array {
 		return [
-			'post_types'  => $this->get_registered_post_types(),
+			// 'post_types'  => $this->get_registered_post_types(),
 			'scripts'     => $this->get_scripts_by_plugin(),
 			'styles'      => $this->get_styles_by_plugin(),
 			'hooks'       => $this->get_hooks_by_plugin(),
-			'cron_jobs'   => $this->get_cron_jobs_by_plugin(),
-			'query_count' => $this->get_plugin_query_count(),
+			// 'cron_jobs'   => $this->get_cron_jobs_by_plugin(),
+			// 'query_count' => $this->get_plugin_query_count(),
 		];
 	}
 
