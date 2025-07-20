@@ -1,0 +1,147 @@
+<?php
+
+namespace BoltAudit\App\Services;
+
+use ReflectionFunction;
+use ReflectionMethod;
+
+/**
+ * Collects performance metrics for individual plugins.
+ */
+class PluginMetricsCollector {
+	protected string $slug;
+
+	public function run( string $slug ): array {
+		$this->slug = $slug;
+
+		return $this->collect_now();
+	}
+
+	protected function collect_now(): array {
+		return [
+			'scripts' => $this->merge_registered_and_enqueued( $this->get_scripts_by_plugin(), $this->get_enqueued_scripts_by_plugin() ),
+			'styles'  => $this->merge_registered_and_enqueued( $this->get_styles_by_plugin(), $this->get_enqueued_styles_by_plugin() ),
+			'hooks'   => $this->get_hooks_by_plugin(),
+		];
+	}
+
+	protected function merge_registered_and_enqueued( array $registered, array $enqueued ): array {
+		$map = [];
+		foreach ( $registered as $item ) {
+			$map[$item['handle']] = $item;
+		}
+
+		foreach ( $enqueued as $item ) {
+			if ( isset( $map[$item['handle']] ) ) {
+				$map[$item['handle']]['enqueued'] = true;
+			} else {
+				$map[$item['handle']] = [
+					'handle'   => $item['handle'],
+					'src'      => $item['src'],
+					'enqueued' => true,
+				];
+			}
+		}
+
+		return array_values( $map );
+	}
+
+	protected function belongs_to_plugin( string $path ): bool {
+		if ( empty( $path ) ) {
+			return false;
+		}
+		$plugin_dir = wp_normalize_path( WP_PLUGIN_DIR . '/' . $this->slug );
+
+		return strpos( wp_normalize_path( $path ), $plugin_dir ) === 0;
+	}
+
+	protected function get_callback_file( $callback ) {
+		try {
+			if ( is_string( $callback ) ) {
+				if ( strpos( $callback, '::' ) !== false ) {
+					list( $class, $method ) = explode( '::', $callback );
+					if ( class_exists( $class ) ) {
+						return ( new ReflectionMethod( $class, $method ) )->getFileName();
+					}
+				} elseif ( function_exists( $callback ) ) {
+					return ( new ReflectionFunction( $callback ) )->getFileName();
+				}
+			} elseif ( is_array( $callback ) ) {
+				if ( is_object( $callback[0] ) || class_exists( $callback[0] ) ) {
+					return ( new ReflectionMethod( $callback[0], $callback[1] ) )->getFileName();
+				}
+			} elseif ( $callback instanceof \Closure ) {
+				return ( new ReflectionFunction( $callback ) )->getFileName();
+			}
+		} catch ( \ReflectionException $e ) {}
+
+		return;
+	}
+
+	public function get_hooks_by_plugin(): int {
+		global $wp_filter;
+		$count = 0;
+		foreach ( $wp_filter as $hook ) {
+			foreach ( $hook->callbacks ?? [] as $callbacks ) {
+				foreach ( $callbacks as $callback ) {
+					$file = $this->get_callback_file( $callback['function'] ) ?? '';
+					if ( $this->belongs_to_plugin( $file ) ) {
+						$count++;
+					}
+				}
+			}
+		}
+
+		return $count;
+	}
+
+	public function get_scripts_by_plugin(): array {
+		global $wp_scripts;
+		$found = [];
+		foreach ( $wp_scripts->registered ?? [] as $handle => $data ) {
+			if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+				$found[] = ['handle' => $handle, 'src' => $data->src];
+			}
+		}
+
+		return $found;
+	}
+
+	public function get_enqueued_scripts_by_plugin(): array {
+		global $wp_scripts;
+		$found = [];
+		foreach ( $wp_scripts->queue ?? [] as $handle ) {
+			$data = $wp_scripts->registered[$handle] ?? null;
+			if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+				$found[] = ['handle' => $handle, 'src' => $data->src];
+			}
+		}
+
+		return $found;
+	}
+
+	public function get_styles_by_plugin(): array {
+		global $wp_styles;
+		$found = [];
+		foreach ( $wp_styles->registered ?? [] as $handle => $data ) {
+			if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+				$found[] = ['handle' => $handle, 'src' => $data->src];
+			}
+		}
+
+		return $found;
+	}
+
+	public function get_enqueued_styles_by_plugin(): array {
+		global $wp_styles;
+		$found = [];
+		foreach ( $wp_styles->queue ?? [] as $handle ) {
+			$data = $wp_styles->registered[$handle] ?? null;
+			if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
+				$found[] = ['handle' => $handle, 'src' => $data->src];
+			}
+		}
+
+		return $found;
+	}
+}

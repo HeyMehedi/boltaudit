@@ -1,11 +1,11 @@
 <?php
-
 namespace BoltAudit\App\Repositories;
+
+defined( 'ABSPATH' ) || exit;
 
 use BoltAudit\App\Repositories\OptionsRepository;
 
 class PluginsRepository {
-
 	protected static $cached_plugins_data = null;
 
 	public static function get_plugins_data() {
@@ -21,78 +21,16 @@ class PluginsRepository {
 			require_once ABSPATH . 'wp-admin/includes/update.php';
 		}
 
-		$all_plugins    = get_plugins();
-		$plugin_updates = get_plugin_updates();
-		$plugins_data   = [];
-		$active_plugins = get_option( 'active_plugins', [] );
+		$all_plugins  = get_plugins();
+		$plugins_data = [];
 
 		foreach ( $all_plugins as $plugin_file => $plugin_data ) {
-			$slug         = dirname( $plugin_file );
-			$version      = $plugin_data['Version'] ?? 'unknown';
-			$option_key   = "plugin_data_{$slug}_v{$version}";
-			$cached_entry = OptionsRepository::get_option( $option_key, 'plugins_cache' );
-
-			if ( $cached_entry && ! empty( $cached_entry['data'] ) ) {
-				$plugins_data[] = json_decode( $cached_entry['data'], true );
-				continue;
-			}
-
-			$wp_org_info  = self::fetch_wp_org_info( $slug );
-			$is_wp_repo   = ! empty( $wp_org_info ) && ! is_wp_error( $wp_org_info );
-			$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
-			$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
-
-			$data = [
-				'name'          => $plugin_data['Name'] ?? '',
-				'slug'          => $slug,
-				'plugin_file'   => $plugin_file,
-				'needs_upgrade' => isset( $plugin_updates[$plugin_file] ),
-				'is_wp_repo'    => $is_wp_repo,
-				'is_active'     => in_array( $plugin_file, $active_plugins ),
-				'last_updated'  => $last_updated,
-				'is_abandoned'  => $is_abandoned,
-				'version'       => $version,
-			];
-
-			OptionsRepository::create_option( $option_key, 'plugins_cache', $data );
-			$plugins_data[] = $data;
+			$plugins_data[] = SinglePluginRepository::get_basic_plugin_data( $plugin_file, $plugin_data );
 		}
 
 		self::$cached_plugins_data = $plugins_data;
 
 		return $plugins_data;
-	}
-
-	protected static function is_wp_org_plugin( $plugin ) {
-		foreach ( ['PluginURI', 'AuthorURI'] as $key ) {
-			if ( ! empty( $plugin[$key] ) && strpos( $plugin[$key], 'wordpress.org' ) !== false ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	protected static function fetch_wp_org_info( $slug ) {
-		if ( ! function_exists( 'plugins_api' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		}
-
-		$info = plugins_api( 'plugin_information', ['slug' => $slug, 'fields' => ['last_updated' => true]] );
-		if ( is_wp_error( $info ) ) {
-			return;
-		}
-
-		return $info;
-	}
-
-	protected static function is_abandoned( $last_updated ) {
-		$then = strtotime( $last_updated );
-		if ( ! $then ) {
-			return false;
-		}
-
-		return ( time() - $then ) > YEAR_IN_SECONDS;
 	}
 
 	public static function get_counts() {
@@ -110,13 +48,17 @@ class PluginsRepository {
 		$counts      = self::get_counts();
 		$suggestions = [];
 
-		$abandoned_plugins = array_filter( $plugins, function ( $plugin ) {
-			return true === $plugin['is_abandoned'];
-		} );
+		$abandoned_plugins = array_filter(
+			$plugins, function ( $plugin ) {
+				return true === $plugin['is_abandoned'];
+			}
+		);
 
-		$plugins_needing_update = array_filter( $plugins, function ( $plugin ) {
-			return true === $plugin['needs_upgrade'];
-		} );
+		$plugins_needing_update = array_filter(
+			$plugins, function ( $plugin ) {
+				return true === $plugin['needs_upgrade'];
+			}
+		);
 
 		$total_plugins    = $counts['total'] ?? count( $plugins );
 		$active_plugins   = $counts['active'] ?? 0;
@@ -181,48 +123,17 @@ class PluginsRepository {
 			require_once ABSPATH . 'wp-admin/includes/update.php';
 		}
 
-		$all_plugins    = get_plugins();
-		$plugin_updates = get_plugin_updates();
-		$active_plugins = get_option( 'active_plugins', [] );
-
-		$offset  = ( $page - 1 ) * $per_page;
-		$slice   = array_slice( $all_plugins, $offset, $per_page, true );
-		$plugins = [];
+		$all_plugins  = get_plugins();
+		$offset       = ( $page - 1 ) * $per_page;
+		$slice        = array_slice( $all_plugins, $offset, $per_page, true );
+		$plugins_data = [];
 
 		foreach ( $slice as $plugin_file => $plugin_data ) {
-			$slug         = dirname( $plugin_file );
-			$version      = $plugin_data['Version'] ?? 'unknown';
-			$option_key   = "plugin_data_{$slug}_v{$version}";
-			$cached_entry = OptionsRepository::get_option( $option_key, 'plugins_cache' );
-
-			if ( $cached_entry && ! empty( $cached_entry['data'] ) ) {
-				$plugins[] = json_decode( $cached_entry['data'], true );
-				continue;
-			}
-
-			$wp_org_info  = self::fetch_wp_org_info( $slug );
-			$is_wp_repo   = ! empty( $wp_org_info ) && ! is_wp_error( $wp_org_info );
-			$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
-			$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
-
-			$data = [
-				'name'          => $plugin_data['Name'] ?? '',
-				'slug'          => $slug,
-				'plugin_file'   => $plugin_file,
-				'needs_upgrade' => isset( $plugin_updates[$plugin_file] ),
-				'is_wp_repo'    => $is_wp_repo,
-				'is_active'     => in_array( $plugin_file, $active_plugins ),
-				'last_updated'  => $last_updated,
-				'is_abandoned'  => $is_abandoned,
-				'version'       => $version,
-			];
-
-			OptionsRepository::create_option( $option_key, 'plugins_cache', $data );
-			$plugins[] = $data;
+			$plugins_data[] = SinglePluginRepository::get_basic_plugin_data( $plugin_file, $plugin_data );
 		}
 
 		return [
-			'plugins'       => $plugins,
+			'plugins'       => $plugins_data,
 			'total_plugins' => count( $all_plugins ),
 		];
 	}
@@ -237,7 +148,7 @@ class PluginsRepository {
 		$active         = count( $active_plugins );
 		$inactive       = $total - $active;
 
-		$cached    = OptionsRepository::get_all_options( 'plugins_cache' );
+		$cached    = OptionsRepository::get_all_options( 'plugin_basic_cache' );
 		$abandoned = 0;
 		foreach ( $cached as $entry ) {
 			$data = json_decode( is_array( $entry ) ? $entry['data'] : $entry->data, true );

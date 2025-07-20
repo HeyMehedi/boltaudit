@@ -17,3 +17,4 @@ composer.lock
 __build
 assets
 notes.txt
+.DS_Store
