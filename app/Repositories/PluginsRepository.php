@@ -25,7 +25,7 @@ class PluginsRepository {
 		$plugins_data = [];
 
 		foreach ( $all_plugins as $plugin_file => $plugin_data ) {
-			$plugins_data[] = SinglePluginRepository::get_plugin_data( $plugin_file, $plugin_data );
+			$plugins_data[] = SinglePluginRepository::get_basic_plugin_data( $plugin_file, $plugin_data );
 		}
 
 		self::$cached_plugins_data = $plugins_data;
@@ -129,7 +129,7 @@ class PluginsRepository {
 		$plugins_data = [];
 
 		foreach ( $slice as $plugin_file => $plugin_data ) {
-			$plugins_data[] = SinglePluginRepository::get_plugin_data( $plugin_file, $plugin_data );
+			$plugins_data[] = SinglePluginRepository::get_basic_plugin_data( $plugin_file, $plugin_data );
 		}
 
 		return [
@@ -148,7 +148,7 @@ class PluginsRepository {
 		$active         = count( $active_plugins );
 		$inactive       = $total - $active;
 
-		$cached    = OptionsRepository::get_all_options( 'plugins_cache' );
+		$cached    = OptionsRepository::get_all_options( 'plugin_basic_cache' );
 		$abandoned = 0;
 		foreach ( $cached as $entry ) {
 			$data = json_decode( is_array( $entry ) ? $entry['data'] : $entry->data, true );
