@@ -123,9 +123,12 @@ class PluginMetricsCollector {
 		return $types;
 	}
 
-	public function get_cron_jobs_by_plugin(): array {
-		$cron = _get_cron_array();
-		$jobs = [];
+        public function get_cron_jobs_by_plugin(): array {
+                $cron = _get_cron_array();
+                if ( ! is_array( $cron ) ) {
+                        return [];
+                }
+                $jobs = [];
 		foreach ( $cron as $hooks ) {
 			foreach ( $hooks as $hook => $events ) {
 				foreach ( $events as $event ) {
