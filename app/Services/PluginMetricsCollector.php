@@ -64,10 +64,14 @@ class PluginMetricsCollector {
 
 				return $ref->getFileName();
 			}
-		} catch ( \ReflectionException $e ) {}
+               } catch ( \ReflectionException $e ) {
+                       error_log( $e->getMessage() );
 
-		return;
-	}
+                       return null;
+               }
+
+               return null;
+       }
 
 	public function get_hooks_by_plugin(): int {
 		global $wp_filter;
