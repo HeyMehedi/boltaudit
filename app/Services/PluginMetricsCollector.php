@@ -14,17 +14,7 @@ class PluginMetricsCollector {
 	public function run( string $slug ): array {
 		$this->slug = $slug;
 
-		// Ensure we defer execution until everything is loaded
-		if ( did_action( 'shutdown' ) ) {
-			return $this->collect_now();
-		}
-
-		$collected = [];
-		add_action( 'shutdown', function () use ( &$collected ) {
-			$collected = $this->collect_now();
-		}, 999 );
-
-		return $collected; // May be empty until shutdown runs
+		return $this->collect_now();
 	}
 
 	protected function collect_now(): array {

@@ -95,7 +95,7 @@ class SinglePluginRepository {
 			];
 		}
 
-		$metrics = ( new PluginMetricsCollector() )->run( 'plugin-slug' );
+		$metrics = ( new PluginMetricsCollector() )->run( $slug );
 
 		OptionsRepository::create_option( $option_key, 'plugin_single_cache', $metrics );
 
