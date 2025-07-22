@@ -18,10 +18,28 @@ class PluginMetricsCollector {
 	}
 
 	protected function collect_now(): array {
+		$scripts = $this->merge_registered_and_enqueued(
+			$this->get_scripts_by_plugin(),
+			$this->get_enqueued_scripts_by_plugin()
+		);
+
+		$styles = $this->merge_registered_and_enqueued(
+			$this->get_styles_by_plugin(),
+			$this->get_enqueued_styles_by_plugin()
+		);
+
+		$enqueued = array_filter(
+			array_merge( $scripts, $styles ),
+			fn( $asset ) => ! empty( $asset['enqueued'] )
+		);
+
 		return [
-			'scripts' => $this->merge_registered_and_enqueued( $this->get_scripts_by_plugin(), $this->get_enqueued_scripts_by_plugin() ),
-			'styles'  => $this->merge_registered_and_enqueued( $this->get_styles_by_plugin(), $this->get_enqueued_styles_by_plugin() ),
-			'hooks'   => $this->get_hooks_by_plugin(),
+			'scripts'        => $scripts,
+			'styles'         => $styles,
+			'scripts_count'  => count( $scripts ),
+			'styles_count'   => count( $styles ),
+			'enqueued_count' => count( $enqueued ),
+			'hooks'          => $this->get_hooks_by_plugin(),
 		];
 	}
 
