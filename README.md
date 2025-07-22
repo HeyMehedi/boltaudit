@@ -17,8 +17,9 @@ Uncover database bloat, autoloaded options, excessive post metadata, and server 
 == Installation ==
 1. Upload the `boltaudit` folder to `/wp-content/plugins/`.  
 2. Activate “BoltAudit” through the ‘Plugins’ menu in WordPress.  
-3. Navigate to **Tools → BoltAudit** to run your first audit.  
+3. Navigate to **Tools → BoltAudit** to run your first audit.
 4. Review the Plugin Audit, Database Report, and Environment sections to pinpoint issues.
+5. Use the **WooCommerce Overview** for product counts, HPOS status, and other store performance insights.
 
 == Frequently Asked Questions ==
 = What does “abandoned plugin” mean? =
