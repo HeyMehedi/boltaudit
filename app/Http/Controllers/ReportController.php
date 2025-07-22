@@ -6,6 +6,7 @@ use BoltAudit\App\Repositories\DatabaseRepository;
 use BoltAudit\App\Repositories\EnvironmentRepository;
 use BoltAudit\App\Repositories\PluginsRepository;
 use BoltAudit\App\Repositories\PostsRepository;
+use BoltAudit\App\Repositories\WooCommerceRepository;
 use BoltAudit\WpMVC\RequestValidator\Validator;
 use BoltAudit\WpMVC\Routing\Response;
 use Exception;
@@ -13,12 +14,13 @@ use WP_REST_Request;
 
 class ReportController extends Controller {
 
-	private array $types = [
-		'environment',
-		'posts',
-		'plugins',
-		'database',
-	];
+        private array $types = [
+                'environment',
+                'posts',
+                'plugins',
+                'database',
+                'woocommerce',
+        ];
 
 	public function index( Validator $validator, WP_REST_Request $wp_rest_request ) {
 		$validator->validate(
@@ -62,9 +64,9 @@ class ReportController extends Controller {
 				case 'themes':
 					$response = PostsRepository::get_all();
 					break;
-				case 'woocommerce':
-					$response = PostsRepository::get_all();
-					break;
+                                case 'woocommerce':
+                                        $response = WooCommerceRepository::get_all();
+                                        break;
 			}
 
 			return Response::send( $response );

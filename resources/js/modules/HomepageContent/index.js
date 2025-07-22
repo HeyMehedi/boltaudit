@@ -31,9 +31,9 @@ export default function HomepageContentModule() {
       <Suspense fallback={<ContentLoading />}>
         <PluginsSection />
       </Suspense>
-      {/* <Suspense fallback={<ContentLoading />}>
+      <Suspense fallback={<ContentLoading />}>
         <WoocommerceSection />
-      </Suspense> */}
+      </Suspense>
       <Suspense fallback={<ContentLoading />}>
         <EnvironmentSection />
       </Suspense>
