@@ -29,10 +29,11 @@ Whether you're a developer, site owner, or agency, BoltAudit gives you visibilit
 - Visual impact report per plugin (load time, DB usage, asset weight)  
 - Breaks down post types, metadata, revisions, and orphaned content  
 - Analyzes option tables, autoloaded data, transients, and more  
-- Database snapshot with table sizes, row counts, autoload bloat  
-- Server environment checks: PHP, MySQL, memory limits, upload size  
-- Lightweight, on-demand diagnostics—no front-end performance impact  
-- Responsive, accessible UI with performance optimizations  
+- Database snapshot with table sizes, row counts, autoload bloat
+- Server environment checks: PHP, MySQL, memory limits, upload size
+- Lightweight, on-demand diagnostics—no front-end performance impact
+- Responsive, accessible UI with performance optimizations
+- WooCommerce Overview with product counts and performance insights (HPOS, cart fragments, and more)
 
 == Screenshots ==
 
