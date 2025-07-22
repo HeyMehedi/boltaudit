@@ -95,6 +95,9 @@ class WooCommerceRepository {
                 // WooCommerce transients
                 $wc_transients = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '_transient_wc_%'" );
 
+                // High Performance Order Storage
+                $hpos_enabled = 'yes' === get_option( 'woocommerce_custom_orders_table_enabled', 'no' );
+
                 self::$insights_cache = [
                         'cart_fragments_sitewide' => $cart_fragments,
                         'styles_js_global'       => $styles_global && $scripts_global,
@@ -103,6 +106,7 @@ class WooCommerceRepository {
                         'scheduled_actions'      => $scheduled_actions,
                         'unused_product_tags'    => $unused_tags,
                         'wc_transients'          => $wc_transients,
+                        'hpos_enabled'           => $hpos_enabled,
                 ];
 
                 return self::$insights_cache;
