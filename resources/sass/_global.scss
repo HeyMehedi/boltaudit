@@ -98,6 +98,8 @@ html {
 // Tooltip CSS
 .bs-dashboard-tooltip {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   &:hover {
     svg path {
       fill: var(--ba-dashboard-primary-color);

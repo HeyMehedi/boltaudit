@@ -91,7 +91,7 @@ class SinglePluginRepository {
 		if ( $plugin_single && ! empty( $plugin_single['data'] ) ) {
 			return [
 				'plugin_page'  => json_decode( $plugin_single['data'], true ),
-				'plugin_basic' => is_array( $plugin_basic ) ? $plugin_basic : json_decode( $plugin_basic['data'], true ),
+				'plugin_basic' => is_array( $plugin_basic ) ? json_decode( $plugin_basic['data'], true ) : [],
 			];
 		}
 
