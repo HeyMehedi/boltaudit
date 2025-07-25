@@ -52,6 +52,7 @@ class SinglePluginRepository {
 		$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
 		$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
 
+		error_log( '$plugin_data : ' . print_r( $plugin_data, true ) );
 		$data = [
 			'name'          => $plugin_data['Name'] ?? '',
 			'slug'          => $slug,
@@ -62,6 +63,7 @@ class SinglePluginRepository {
 			'last_updated'  => $last_updated,
 			'is_abandoned'  => $is_abandoned,
 			'version'       => $version,
+			'author'        => $plugin_data['Author'] ?? '',
 		];
 
 		OptionsRepository::create_option( $option_key, 'plugin_basic_cache', $data );

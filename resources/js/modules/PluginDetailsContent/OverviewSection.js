@@ -23,10 +23,13 @@ export default function OverviewSection(plugin) {
             }
             <div className="ba-dashboard__content__overview__badge">
 
-              {pluginInfo?.is_active ? (
+                {pluginInfo?.is_active ? (
                   <span className="plugin-badge active">Active</span>
                 ) : (
                   <span className="plugin-badge inactive">Inctive</span>
+                )}
+                {pluginInfo?.is_wp_repo && (
+                  <span className="plugin-badge community">Community</span>
                 )}
                 {pluginInfo?.needs_upgrade && (
                   <span className="plugin-badge upgrade">Outdated</span>

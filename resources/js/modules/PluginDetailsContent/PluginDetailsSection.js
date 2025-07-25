@@ -32,7 +32,7 @@ export default function PluginDetailsSection(plugin) {
           <div className="ba-dashboard__content__section__overview">
             <div className="ba-dashboard__content__section__overview__single">
               <span className="ba-dashboard__content__section__overview__title">
-                Unconditional
+                Unconditional Enqueued
               </span>
               <span className="ba-dashboard__content__section__overview__count">
                 {pluginData.enqueued_count || '0'}
@@ -41,7 +41,7 @@ export default function PluginDetailsSection(plugin) {
 
             <div className="ba-dashboard__content__section__overview__single">
               <span className="ba-dashboard__content__section__overview__title">
-                Scripts
+                Scripts Registered
               </span>
               <span className="ba-dashboard__content__section__overview__count">
                 {pluginData.scripts_count || '0'}
@@ -50,7 +50,7 @@ export default function PluginDetailsSection(plugin) {
 
             <div className="ba-dashboard__content__section__overview__single">
               <span className="ba-dashboard__content__section__overview__title">
-                Styles
+                Styles Registered
               </span>
               <span className="ba-dashboard__content__section__overview__count">
                 {pluginData.styles_count || "0"}
@@ -88,8 +88,8 @@ export default function PluginDetailsSection(plugin) {
                             {value.src}
                           </Link>
                         </td>
-                        <td>{value.size_kb} kb</td>
-                        <td>{value.load_time_ms} ms</td>
+                        <td>{(value.size_kb)?.toFixed(2)} kb</td>
+                        <td>{(value.load_time_ms)?.toFixed(2)} ms</td>
                       </tr>
                     ))}
 
@@ -104,8 +104,8 @@ export default function PluginDetailsSection(plugin) {
                             {value.src}
                           </Link>
                         </td>
-                        <td>{value.size_kb} kb</td>
-                        <td>{value.load_time_ms} ms</td>
+                        <td>{(value.size_kb)?.toFixed(2)} kb</td>
+                        <td>{(value.load_time_ms)?.toFixed(2)} ms</td>
                       </tr>
                     ))}
                   </>
