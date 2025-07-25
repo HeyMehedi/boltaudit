@@ -3,7 +3,7 @@ Contributors: boltbrains
 Tags: audit, performance, optimization, database, plugins, security
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 0.0.4
+Stable tag: 0.0.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,12 @@ No. BoltAudit reads data but does not deactivate or delete anything. All actions
 Not in beta, but future releases will offer optional PageSpeed Insights integration.
 
 == Changelog ==
+
+= 0.0.5 – 2025-07-25 =  
+* Added asset impact metrics: script/style file size and load duration  
+* Enhanced SinglePluginRepository caching for faster repeated audits  
+* UI improvements for metrics breakdown 
+* Bug fixes and performance optimizations  
 
 = 0.0.4 – 2025-07-16 =  
 * Added Site Details section
