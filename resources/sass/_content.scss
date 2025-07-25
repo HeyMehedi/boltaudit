@@ -1,13 +1,14 @@
 // Content
 .ba-dashboard__content {
   display: flex;
-  gap: 32px;
-  padding: 40px 32px;
+  width: 100%;
   box-sizing: border-box;
   background: #f0f0f1;
   &__wrapper {
     display: flex;
     gap: 48px;
+    flex: 1;
+    padding: 40px 32px;
     flex-direction: column;
   }
   &__section {
@@ -74,7 +75,7 @@
         background-color: var(--ba-dashboard-section-bg-color);
         border-radius: 8px;
         flex: 0 0 25%;
-        max-width: 22.91%;
+        max-width: 22%;
         box-sizing: border-box;
       }
       &__title {
@@ -99,6 +100,7 @@
         th {
           width: auto;
           min-width: 120px;
+          max-width: 120px;
           height: 40px;
           font-size: 14px;
           font-weight: 600;
@@ -138,15 +140,19 @@
         }
         td {
           height: 40px;
-          padding: 0 16px;
+          max-width: 120px;
+          box-sizing: border-box;
+          word-wrap: break-word;
+          padding: 8px 16px;
           font-size: 14px;
           font-weight: 500;
-          line-height: 1.2;
+          line-height: 1.6;
           text-align: center;
           color: var(--ba-dashboard-dark-color);
           border-top: 1px solid var(--ba-dashboard-section-border-color);
           border-bottom: 1px solid var(--ba-dashboard-section-border-color);
-           &:first-child {
+          &:first-child {
+            padding-right: 0;
             border-left: 1px solid var(--ba-dashboard-section-border-color);
           }
           &:last-child {
@@ -155,6 +161,7 @@
           &.plugin-name {
             display: flex;
             align-items: center;
+            max-width: unset;
             padding-top: 5px;
             padding-bottom: 5px;
           }
@@ -166,6 +173,9 @@
             &.action {
               justify-content: end;
             }
+          }
+          a.plugin-detail-asset {
+            display: block;
           }
           &:first-child {
             text-align: left;
@@ -299,6 +309,11 @@
   &__sidebar {
     width: 230px;
     min-width: 230px;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 40px 24px;
+    background-color: #ffffff;
+    border-left: 1px solid var(--ba-dashboard-border-color);
     &__widget {
       display: flex;
       gap: 24px;
@@ -377,12 +392,15 @@
           gap: 8px;
           align-items: center;
           flex-wrap: wrap;
-          min-height: 30px;
+          padding: 5px 0;
           margin: 0;
           font-size: 12px;
           font-weight: 500;
           line-height: 1.6;
           border-bottom: 1px solid var(--ba-dashboard-section-border-color);
+          &:last-child {
+            padding-bottom: 12px;
+          }
           .info-value {
             display: flex;
             gap: 6px;

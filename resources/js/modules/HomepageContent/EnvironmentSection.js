@@ -1,3 +1,4 @@
+import ContentLoading from "@components/ContentLoading";
 import postData from "@helper/postData";
 import { useEffect, useState } from "@wordpress/element";
 
@@ -38,9 +39,14 @@ export default function EnvironmentSection() {
       id="ba-dashboard__environment"
       className="ba-dashboard__content__section"
     >
-      <h4 className="ba-dashboard__content__section__title">Environment & Configuration Snapshot</h4>
-      <p className="ba-dashboard__content__section__desc">Get a full snapshot of your server and WordPress setup—PHP version, memory limits, upload size, and more. <br/>
-        Useful for finding misconfigurations that affect performance or plugin compatibility.
+      <h4 className="ba-dashboard__content__section__title">
+        Environment & Configuration Snapshot
+      </h4>
+      <p className="ba-dashboard__content__section__desc">
+        Get a full snapshot of your server and WordPress setup—PHP version,
+        memory limits, upload size, and more. <br />
+        Useful for finding misconfigurations that affect performance or plugin
+        compatibility.
       </p>
       {/* <a
         href="#"
@@ -51,46 +57,56 @@ export default function EnvironmentSection() {
 
       <div className="ba-dashboard__content__section__content">
         <div className="ba-dashboard__content__section__data">
-          <div className="ba-dashboard__tab">
-            <ul className="ba-dashboard__tab__list">
-              {Object.keys(allData).map((tabKey) => (
-                <li
-                  key={tabKey}
-                  className={`ba-dashboard__tab__item ${
-                    activeTab === tabKey ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab(tabKey)}
-                >
-                  {tabKey === "wordpress"
-                    ? "WordPress"
-                    : tabKey === "php"
-                    ? "PHP"
-                    : tabKey.charAt(0).toUpperCase() + tabKey.slice(1)}
-                </li>
-              ))}
-            </ul>
-
-            <div className="ba-dashboard__tab__content">
-              <div className="ba-dashboard__tab__content__wrap">
-                {Object.entries(flattenedData).map(([key, value]) => (
-                  <div key={key} className="ba-dashboard__tab__content__single">
-                    <span className="ba-dashboard__tab__content__single__title">
-                      {key.replace(/_/g, " ")}
-                    </span>
-                    <span className="ba-dashboard__tab__content__single__value">
-                      {Array.isArray(value)
-                        ? value.join(", ")
-                        : value === null
-                        ? "null"
-                        : typeof value === "boolean"
-                        ? value.toString()
-                        : value}
-                    </span>
-                  </div>
+          {allData ? (
+            <div className="ba-dashboard__tab">
+              <ul className="ba-dashboard__tab__list">
+                {Object.keys(allData).map((tabKey) => (
+                  <li
+                    key={tabKey}
+                    className={`ba-dashboard__tab__item ${
+                      activeTab === tabKey ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab(tabKey)}
+                  >
+                    {tabKey === "wordpress"
+                      ? "WordPress"
+                      : tabKey === "php"
+                      ? "PHP"
+                      : tabKey.charAt(0).toUpperCase() + tabKey.slice(1)}
+                  </li>
                 ))}
+              </ul>
+
+              <div className="ba-dashboard__tab__content">
+                <div className="ba-dashboard__tab__content__wrap">
+                  {
+                    Object.entries(flattenedData).length > 0 ? Object.entries(flattenedData).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="ba-dashboard__tab__content__single"
+                      >
+                        <span className="ba-dashboard__tab__content__single__title">
+                          {key.replace(/_/g, " ")}
+                        </span>
+                        <span className="ba-dashboard__tab__content__single__value">
+                          {Array.isArray(value)
+                            ? value.join(", ")
+                            : value === null
+                            ? "null"
+                            : typeof value === "boolean"
+                            ? value.toString()
+                            : value}
+                        </span>
+                      </div>
+                    )) :
+                    <ContentLoading />
+                  }
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <ContentLoading />
+          )}
         </div>
       </div>
     </div>

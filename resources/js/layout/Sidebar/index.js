@@ -1,30 +1,39 @@
 import { useEffect, useState } from "@wordpress/element";
 import ReactSVG from "react-inlinesvg";
-
 import menuIcon from "@icon/reader.svg";
-
-const sections = [
-  {
-    id: "ba-dashboard__post",
-    name: "Post Types",
-  },
-  {
-    id: "ba-dashboard__database",
-    name: "Database",
-  },
-  {
-    id: "ba-dashboard__plugins",
-    name: "Plugins",
-  },
-  {
-    id: "ba-dashboard__environment",
-    name: "Environment",
-  },
-];
 
 const Sidebar = (props) => {
   const [activeSection, setActiveSection] = useState("");
   const [isSidebarFixed, setIsSidebarFixed] = useState(false);
+
+  const type = props.type;
+
+  const sections =
+    type === "detailsHeader"
+      ? [
+          {
+            id: "ba-dashboard__styles_scripts",
+            name: "Assets",
+          },
+        ]
+      : [
+          {
+            id: "ba-dashboard__post",
+            name: "Post Types",
+          },
+          {
+            id: "ba-dashboard__database",
+            name: "Database",
+          },
+          {
+            id: "ba-dashboard__plugins",
+            name: "Plugins",
+          },
+          {
+            id: "ba-dashboard__environment",
+            name: "Environment",
+          },
+        ];
 
   function handleSection(item) {
     setActiveSection(item);
@@ -52,7 +61,7 @@ const Sidebar = (props) => {
     handleScroll(); // initialize on mount
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sections]); // include in dependency
 
   return (
     <aside
