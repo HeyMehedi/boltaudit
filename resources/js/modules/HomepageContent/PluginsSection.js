@@ -121,12 +121,12 @@ export default function PluginsSection() {
                   <th>Name</th>
                   <th>
                     Details
-                    <span className="bs-dashboard-tooltip">
+                    {/* <span className="bs-dashboard-tooltip">
                       <ReactSVG src={infoIcon} width={16} height={16} />
                       <span className="bs-dashboard-tooltip-content">
                         Upcoming
                       </span>
-                    </span>
+                    </span> */}
                   </th>
                 </tr>
               </thead>
