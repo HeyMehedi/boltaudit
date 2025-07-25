@@ -10,11 +10,14 @@
 @import "chart";
 @import "badges";
 
-.ba-menu-page-wrapper {
+#wpbody-content > div {
+  display: none !important;
+}
+#wpbody-content .ba-menu-page-wrapper {
+  display: block !important;
   margin-left: -20px;
   background: #fff;
 }
-
 .ba-dashboard__wrapper {
   display: flex;
 }
