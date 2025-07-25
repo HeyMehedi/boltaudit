@@ -1,6 +1,6 @@
 import postData from "@helper/postData";
 import AppLayout from "@layout/AppLayout";
-import ContentSidebarModule from "@modules/ContentSidebar";
+import ContentSidebarModule from "@modules/PluginContentSidebar";
 import PluginDetailsModule from "@modules/PluginDetailsContent";
 import { useEffect, useState } from "@wordpress/element";
 import { useParams } from "react-router-dom";

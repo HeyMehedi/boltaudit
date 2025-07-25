@@ -10,7 +10,7 @@ const AppLayout = ({ children }) => {
     <div className="ba-dashboard">
       <Header type={type} />
       <div className="ba-dashboard__wrapper">
-        <Sidebar />
+        <Sidebar type={type} />
         {children}
       </div>
     </div>

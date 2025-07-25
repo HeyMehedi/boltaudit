@@ -170,7 +170,7 @@ class PluginMetricsCollector {
 			// Only handle full URLs
 			if ( ! filter_var( $full_url, FILTER_VALIDATE_URL ) ) {
 				$asset['load_time_ms'] = null;
-				$asset['size_bytes']   = null;
+				$asset['size_kb']      = null;
 				continue;
 			}
 
@@ -180,14 +180,17 @@ class PluginMetricsCollector {
 
 			if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 				$asset['load_time_ms'] = null;
-				$asset['size_bytes']   = null;
+				$asset['size_kb']      = null;
 				continue;
 			}
 
 			$asset['load_time_ms'] = round( $elapsed, 2 );
-			$asset['size_bytes']   = strlen( wp_remote_retrieve_body( $response ) );
+			$asset_body            = wp_remote_retrieve_body( $response );
+			$size_bytes            = strlen( $asset_body );
+			$asset['size_kb']      = round( $size_bytes / 1024, 2 ); // Convert to kilobytes
 		}
 
 		return $assets;
 	}
+
 }

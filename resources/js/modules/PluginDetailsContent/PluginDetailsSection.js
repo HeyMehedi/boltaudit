@@ -20,13 +20,12 @@ export default function PluginDetailsSection(plugin) {
     }, [plugin] );
 
   return (
-    <div id="ba-dashboard__plugin_details" className="ba-dashboard__content__section">
+    <div id="ba-dashboard__assets" className="ba-dashboard__content__section">
       <h4 className="ba-dashboard__content__section__title">
-        Styles & Scripts
+        Assets
       </h4>
       <p className="ba-dashboard__content__section__desc">
-        Get a quick look at your site's style & scripts big it is, how many tables
-        it has, and what’s inside.
+        Get a clear picture of how many scripts and styles are unconditionally registered and enqueued — and how they might be hurting your site's performance.
       </p>
       {dataFetched ? (
         <div className="ba-dashboard__content__section__content">
@@ -37,15 +36,6 @@ export default function PluginDetailsSection(plugin) {
               </span>
               <span className="ba-dashboard__content__section__overview__count">
                 {pluginData.enqueued_count || '0'}
-              </span>
-            </div>
-
-            <div className="ba-dashboard__content__section__overview__single">
-              <span className="ba-dashboard__content__section__overview__title">
-                Hooks
-              </span>
-              <span className="ba-dashboard__content__section__overview__count">
-                {pluginData.hooks || '0'}
               </span>
             </div>
 
@@ -79,23 +69,49 @@ export default function PluginDetailsSection(plugin) {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(pluginData.styles).map(([key, value]) => (
-                  <tr key={key}>
-                    <td>{value.handle} {value?.enqueued ? <span className="plugin-badge enqueued">enqueued</span> : null}</td>
-                    <td><Link className="plugin-detail-asset" to={value.src} target="_blank" rel="noopener noreferrer">{value.src}</Link></td>
-                    <td>{value.size_bytes} bytes</td>
-                    <td>{value.load_time_ms}ms</td>
+                {pluginData.styles.length === 0 && pluginData.scripts.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: 'center', fontStyle: 'italic', color: '#666' }}>
+                      No unconditional scripts or styles registered for this plugin.
+                    </td>
                   </tr>
-                ))}
-                {Object.entries(pluginData.scripts).map(([key, value]) => (
-                  <tr key={key}>
-                    <td>{value.handle} {value?.enqueued ? <span className="plugin-badge enqueued">enqueued</span> : null}</td>
-                    <td><Link className="plugin-detail-asset" to={value.src} target="_blank" rel="noopener noreferrer">{value.src}</Link></td>
-                    <td>{value.size_bytes}</td>
-                    <td>{value.load_time_ms}ms</td>
-                  </tr>
-                ))}
+                ) : (
+                  <>
+                    {pluginData.styles.map((value, key) => (
+                      <tr key={`style-${key}`}>
+                        <td>
+                          {value.handle}
+                          {value?.enqueued && <span className="plugin-badge enqueued">enqueued</span>}
+                        </td>
+                        <td>
+                          <Link className="plugin-detail-asset" to={value.src} target="_blank" rel="noopener noreferrer">
+                            {value.src}
+                          </Link>
+                        </td>
+                        <td>{value.size_kb} kb</td>
+                        <td>{value.load_time_ms} ms</td>
+                      </tr>
+                    ))}
+
+                    {pluginData.scripts.map((value, key) => (
+                      <tr key={`script-${key}`}>
+                        <td>
+                          {value.handle}
+                          {value?.enqueued && <span className="plugin-badge enqueued">enqueued</span>}
+                        </td>
+                        <td>
+                          <Link className="plugin-detail-asset" to={value.src} target="_blank" rel="noopener noreferrer">
+                            {value.src}
+                          </Link>
+                        </td>
+                        <td>{value.size_kb} kb</td>
+                        <td>{value.load_time_ms} ms</td>
+                      </tr>
+                    ))}
+                  </>
+                )}
               </tbody>
+
             </table>
           </div>
         </div>) : (

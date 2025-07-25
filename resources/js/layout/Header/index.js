@@ -41,7 +41,7 @@ const Header = (props) => {
   return (
     <header className="ba-dashboard__header">
       { type !== 'detailsHeader' ? (
-				<Link to="/" className="ba-dashboard__header__logo">
+				<Link to="/#ba-dashboard__plugins" className="ba-dashboard__header__logo">
           <img
             className="ba-dashboard__header__logo__img"
             src={Logo}
