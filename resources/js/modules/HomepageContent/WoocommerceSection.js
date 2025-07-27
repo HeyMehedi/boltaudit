@@ -1,7 +1,10 @@
 import ContentLoading from "@components/ContentLoading";
 import CountUp from "@components/CountUp";
 import postData from "@helper/postData";
+import ReactSVG from 'react-inlinesvg';
 import { useEffect, useState } from "@wordpress/element";
+
+import arrowRightIcon from '@icon/arrow-right.svg';
 
 export default function WoocommerceSection() {
   const [data, setData] = useState(null);
@@ -21,16 +24,15 @@ export default function WoocommerceSection() {
 
   const rows = [
     {
-      label: "Cart Fragments Sitewide",
+      label: "HPOS Enabled",
       description:
-        "Detects if wc-ajax=get_refreshed_fragments loads on every page, which hurts caching.",
-      value: insights.cart_fragments_sitewide ? "❌" : "✅",
+        "Indicates if High Performance Order Storage feature is active.",
+      value: insights.hpos_enabled ? "✅" : "❌",
     },
     {
-      label: "Woo Styles/JS on All Pages",
-      description:
-        "Checks if WooCommerce scripts and styles are enqueued globally.",
-      value: insights.styles_js_global ? "❌" : "✅",
+      label: "Scheduled Actions",
+      description: "Number of pending actions in ActionScheduler.",
+      value: insights.scheduled_actions,
     },
     {
       label: "High Product Variation Count",
@@ -46,17 +48,18 @@ export default function WoocommerceSection() {
           : "✅",
     },
     {
-      label: "Scheduled Actions",
-      description: "Number of pending actions in ActionScheduler.",
-      value: insights.scheduled_actions,
-    },
-    {
       label: "Unused Product Tags",
       description: "Tags without any products attached.",
       value:
         insights.unused_product_tags > 0
           ? `${insights.unused_product_tags} ⚠️`
           : "✅",
+    },
+    {
+      label: "Woo Styles/JS on All Pages",
+      description:
+        "Checks if WooCommerce scripts and styles are enqueued globally.",
+      value: insights.styles_js_global ? "❌" : "✅",
     },
     {
       label: "Transients (wc_*)",
@@ -67,54 +70,70 @@ export default function WoocommerceSection() {
           : "✅",
     },
     {
-      label: "HPOS Enabled",
+      label: "Cart Fragments Sitewide",
       description:
-        "Indicates if High Performance Order Storage feature is active.",
-      value: insights.hpos_enabled ? "✅" : "❌",
+        "Detects if wc-ajax=get_refreshed_fragments loads on every page, which hurts caching.",
+      value: insights.cart_fragments_sitewide ? "❌" : "✅",
     },
   ];
 
   return (
     <div id="ba-dashboard__woocommerce" className="ba-dashboard__content__section">
       <h4 className="ba-dashboard__content__section__title">
-        WooCommerce Overview
+        WooCommerce Insights
       </h4>
+      <p className="ba-dashboard__content__section__desc">
+        A clear performance snapshot of your store. Detect outdated templates, global asset bloat, unused data, and behaviors that quietly hurt speed and scalability.
+      </p>
+      <a href="#" className="ba-dashboard__content__overview__btn ba-dashboard__btn">
+        <span className="bs-dashboard-tooltip">
+           Open Detailed Report{ ' ' }
+            <ReactSVG
+              src={ arrowRightIcon }
+              width={ 16 }
+              height={ 16 }
+            />
+          <span className="bs-dashboard-tooltip-content">
+            Upcoming
+          </span>
+        </span>
+      </a>
       <div className="ba-dashboard__content__section__content">
         <div className="ba-dashboard__content__section__overview equal-height">
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Products</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.products || 0} />
+              {summary.products || 0}
             </span>
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Variations</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.variations || 0} />
+              {summary.variations || 0}
             </span>
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Orders</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.orders || 0} />
+             {summary.orders || 0} 
             </span>
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Coupons</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.coupons || 0} />
+              {summary.coupons || 0}
             </span>
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Categories</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.categories || 0} />
+              {summary.categories || 0}
             </span>
           </div>
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">Attributes/Terms</span>
             <span className="ba-dashboard__content__section__overview__count">
-              <CountUp target={summary.attribute_terms || 0} />
+              {summary.attribute_terms || 0}
             </span>
           </div>
         </div>
@@ -122,17 +141,15 @@ export default function WoocommerceSection() {
           <table>
             <thead>
               <tr>
-                <th>Feature</th>
-                <th>Description</th>
-                <th>Status</th>
+                <th className="feature">Feature</th>
+                <th className="description">Description</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, idx) => (
                 <tr key={idx}>
-                  <td>{row.label}</td>
-                  <td>{row.description}</td>
-                  <td>{row.value}</td>
+                  <td className="feature">{row.label} — {row.value}</td>
+                  <td className="description">{row.description}</td>
                 </tr>
               ))}
             </tbody>
