@@ -1,7 +1,4 @@
-## Installation
-
 1. Clone GitHub Repository
-
    ```sh
    git clone https:://github.com/boltbrains/boltaudit.git
    ```
