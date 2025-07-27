@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from "@wordpress/element";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
+import ReactSVG from 'react-inlinesvg';
 
 // Import Images
 import { checkedClickedOutside } from "@helper/checkClickedOutside";
 import Logo from "@images/logo.svg";
+import backIcon from '@icon/arrow-left.svg';
 
 const Header = (props) => {
   const [activeDropdown, setActiveDropdown] = useState(false);
+  const type = props.type
+
+	const navigate = useNavigate();
+
+	const handleGoBack = () => {
+		navigate( -1 );
+	};
 
   function handleDropdown(item) {
     if (item === activeDropdown) {
@@ -31,13 +40,23 @@ const Header = (props) => {
 
   return (
     <header className="ba-dashboard__header">
-      <Link to="/" className="ba-dashboard__header__logo">
-        <img
-          className="ba-dashboard__header__logo__img"
-          src={Logo}
-          alt="Logo"
-        />
-      </Link>
+      { type !== 'detailsHeader' ? (
+				<Link to="/#ba-dashboard__plugins" className="ba-dashboard__header__logo">
+          <img
+            className="ba-dashboard__header__logo__img"
+            src={Logo}
+            alt="Logo"
+          />
+        </Link>
+			) : (
+				<button
+            className="ba-dashboard__header__return"
+            onClick={ handleGoBack }
+          >
+            <ReactSVG src={ backIcon } width={ 24 } height={ 24 } />
+          </button>
+			) }
+      
       <div className="ba-dashboard__header__content">
         {/* <div className="ba-dashboard__header__action">
           <div

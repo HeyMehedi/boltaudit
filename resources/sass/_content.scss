@@ -1,13 +1,14 @@
 // Content
 .ba-dashboard__content {
   display: flex;
-  gap: 32px;
-  padding: 40px 32px;
+  width: 100%;
   box-sizing: border-box;
   background: #f0f0f1;
   &__wrapper {
     display: flex;
     gap: 48px;
+    flex: 1;
+    padding: 40px 32px;
     flex-direction: column;
   }
   &__section {
@@ -74,7 +75,7 @@
         background-color: var(--ba-dashboard-section-bg-color);
         border-radius: 8px;
         flex: 0 0 25%;
-        max-width: 22.91%;
+        max-width: 22%;
         box-sizing: border-box;
       }
       &__title {
@@ -217,6 +218,11 @@
   &__sidebar {
     width: 230px;
     min-width: 230px;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 40px 24px;
+    background-color: #ffffff;
+    border-left: 1px solid var(--ba-dashboard-border-color);
     &__widget {
       display: flex;
       gap: 24px;
@@ -295,12 +301,15 @@
           gap: 8px;
           align-items: center;
           flex-wrap: wrap;
-          min-height: 30px;
+          padding: 5px 0;
           margin: 0;
           font-size: 12px;
           font-weight: 500;
           line-height: 1.6;
           border-bottom: 1px solid var(--ba-dashboard-section-border-color);
+          &:last-child {
+            padding-bottom: 12px;
+          }
           .info-value {
             display: flex;
             gap: 6px;

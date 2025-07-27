@@ -3,7 +3,7 @@ Contributors: heymehedi
 Tags: performance, audit, database, optimization, site health
 Requires at least: 5.8
 Tested up to: 6.8
-Stable tag: 0.0.6
+Stable tag: 0.0.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -24,9 +24,9 @@ Whether you're a developer, site owner, or agency, BoltAudit gives you visibilit
 
 == Features ==
 
-- Detect unused and abandoned plugins  
+- Detect unused, outdated, or abandoned plugins  
 - Full Plugin Audit section: inactive, outdated, abandoned detection  
-- Visual impact report per plugin (load time, DB usage, asset weight)  
+- Plugin-level metrics: action/filter hook counts, cron job schedules, database query counts  
 - Breaks down post types, metadata, revisions, and orphaned content  
 - Analyzes option tables, autoloaded data, transients, and more  
 - Database snapshot with table sizes, row counts, autoload bloat
@@ -69,6 +69,13 @@ Total DB size, number of tables (empty vs. used), autoloaded options, transients
 
 == Changelog ==
 
+
+= 0.0.5 – 2025-07-25 =  
+* Added asset impact metrics: script/style file size and load duration  
+* Enhanced SinglePluginRepository caching for faster repeated audits  
+* UI improvements for metrics breakdown 
+* Bug fixes and performance optimizations  
+
 = 0.0.4 – 2025-07-16 =  
 * Added Site Details section
 * Fixed Plugin Audit for too many plugins
@@ -90,11 +97,5 @@ Total DB size, number of tables (empty vs. used), autoloaded options, transients
 
 == Upgrade Notice ==
 
-= 0.0.3 =  
-Plugin Audit section and risk warnings have been added. Environment and database reports are more detailed, and the UI has been optimized for speed.
-
-= 0.0.2 =  
-Database Overview now displays detailed table and autoload metrics. Metadata analysis has been improved.
-
-= 0.0.1 =  
-First beta release with basic environment and post-type reporting.
+= 0.0.5 =  
+New asset impact and plugin-level metrics have been added for deeper insights. Caching and UI have been further optimized.

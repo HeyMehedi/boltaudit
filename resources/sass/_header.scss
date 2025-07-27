@@ -19,6 +19,14 @@
       height: 25px;
     }
   }
+  &__return {
+    padding: 24px;
+    &:hover {
+      svg path {
+        fill: var(--ba-dashboard-primary-color);
+      }
+    }
+  }
   &__content {
     display: flex;
     gap: 24px;

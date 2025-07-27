@@ -41,7 +41,10 @@ class SinglePluginRepository {
 
 		$cached = OptionsRepository::get_option( $option_key, 'plugin_basic_cache' );
 		if ( $cached && ! empty( $cached['data'] ) ) {
-			return json_decode( $cached['data'], true );
+			$data              = json_decode( $cached['data'], true );
+			$data['is_active'] = in_array( $plugin_file, self::$active_plugins );
+
+			return $data;
 		}
 
 		$wp_org_info  = self::fetch_wp_org_info( $slug );
@@ -49,6 +52,7 @@ class SinglePluginRepository {
 		$last_updated = $is_wp_repo ? ( $wp_org_info->last_updated ?? null ) : null;
 		$is_abandoned = $last_updated ? self::is_abandoned( $last_updated ) : null;
 
+		error_log( '$plugin_data : ' . print_r( $plugin_data, true ) );
 		$data = [
 			'name'          => $plugin_data['Name'] ?? '',
 			'slug'          => $slug,
@@ -59,6 +63,7 @@ class SinglePluginRepository {
 			'last_updated'  => $last_updated,
 			'is_abandoned'  => $is_abandoned,
 			'version'       => $version,
+			'author'        => $plugin_data['Author'] ?? '',
 		];
 
 		OptionsRepository::create_option( $option_key, 'plugin_basic_cache', $data );
@@ -81,17 +86,13 @@ class SinglePluginRepository {
 		$version     = $plugin_data['Version'] ?? 'unknown';
 		$option_key  = self::get_plugin_key( $slug, $version );
 
-		$plugin_basic  = OptionsRepository::get_option( $option_key, 'plugin_basic_cache' );
+		$plugin_basic  = self::get_basic_plugin_data( $plugin_file, $plugin_data );
 		$plugin_single = OptionsRepository::get_option( $option_key, 'plugin_single_cache' );
-
-		if ( ! $plugin_basic || empty( $plugin_basic['data'] ) ) {
-			$plugin_basic = self::get_basic_plugin_data( $plugin_file, $plugin_data );
-		}
 
 		if ( $plugin_single && ! empty( $plugin_single['data'] ) ) {
 			return [
 				'plugin_page'  => json_decode( $plugin_single['data'], true ),
-				'plugin_basic' => is_array( $plugin_basic ) ? $plugin_basic : json_decode( $plugin_basic['data'], true ),
+				'plugin_basic' => $plugin_basic,
 			];
 		}
 
@@ -101,7 +102,7 @@ class SinglePluginRepository {
 
 		return [
 			'plugin_page'  => $metrics,
-			'plugin_basic' => is_array( $plugin_basic ) ? $plugin_basic : json_decode( $plugin_basic['data'], true ),
+			'plugin_basic' => $plugin_basic,
 		];
 	}
 
