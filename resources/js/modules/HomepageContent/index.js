@@ -31,9 +31,11 @@ export default function HomepageContentModule() {
       <Suspense fallback={<ContentLoading />}>
         <PluginsSection />
       </Suspense>
-      <Suspense fallback={<ContentLoading />}>
-        <WoocommerceSection />
-      </Suspense>
+      {boltaudit_data?.hasWooCommerce && (
+        <Suspense fallback={<ContentLoading />}>
+          <WoocommerceSection />
+        </Suspense>
+      )}
       <Suspense fallback={<ContentLoading />}>
         <EnvironmentSection />
       </Suspense>
