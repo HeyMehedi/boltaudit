@@ -29,7 +29,15 @@ const Sidebar = (props) => {
             id: "ba-dashboard__plugins",
             name: "Plugins",
           },
-          {
+          ...(boltaudit_data?.hasWooCommerce
+            ? [
+                {
+                  id: "ba-dashboard__woocommerce",
+                  name: "WooCommerce",
+                },
+              ]
+            : []),
+                      {
             id: "ba-dashboard__environment",
             name: "Environment",
           },

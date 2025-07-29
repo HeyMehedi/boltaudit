@@ -13,8 +13,9 @@ if ( 'tools_page_boltaudit' === $hook_suffix ) {
 
 	wp_localize_script(
 		'boltaudit-app-script', 'boltaudit_data', [
-			'siteUrl'  => site_url(),
-			'siteName' => wp_parse_url( site_url( '' ), PHP_URL_HOST ),
+			'siteUrl'        => site_url(),
+			'siteName'       => wp_parse_url( site_url( '' ), PHP_URL_HOST ),
+			'hasWooCommerce' => is_plugin_active( 'woocommerce/woocommerce.php' ),
 		]
 	);
 }
