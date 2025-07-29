@@ -36,7 +36,7 @@ final class BoltAudit {
 	public function load() {
 		register_activation_hook( __FILE__, [$this, 'on_activation'] );
 
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [$this, 'add_settings_link'] );
+		$this->define_constants();
 
 		$application = App::instance();
 
@@ -58,14 +58,12 @@ final class BoltAudit {
 		);
 	}
 
-	public function on_activation(): void {
-		new BoltAudit\App\Setup\Activation();
+	public function define_constants(): void {
+		define( 'BOLTAUDIT_PLUGIN_FILE', __FILE__ );
 	}
 
-	public function add_settings_link( $links ) {
-		$settings_link = '<a href="' . esc_url( admin_url( 'tools.php?page=boltaudit' ) ) . '">' . __( 'Settings', 'boltaudit' ) . '</a>';
-		array_unshift( $links, $settings_link );
-		return $links;
+	public function on_activation(): void {
+		new BoltAudit\App\Setup\Activation();
 	}
 }
 

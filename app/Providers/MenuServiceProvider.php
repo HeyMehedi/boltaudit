@@ -8,6 +8,7 @@ use BoltAudit\WpMVC\Contracts\Provider;
 class MenuServiceProvider implements Provider {
 	public function boot() {
 		add_action( 'admin_menu', [$this, 'register_tools_submenu'] );
+		add_filter( 'plugin_action_links_' . plugin_basename( BOLTAUDIT_PLUGIN_FILE ), [$this, 'add_settings_link'] );
 	}
 
 	public function register_tools_submenu() {
@@ -44,5 +45,11 @@ class MenuServiceProvider implements Provider {
 		/** @psalm-suppress MissingFile */// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 		include_once boltaudit_dir( 'resources/views/admin/base.php' );
 		/** @psalm-suppress MissingFile */// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+	}
+
+	public function add_settings_link( $links ) {
+		$settings_link = '<a href="' . esc_url( admin_url( 'tools.php?page=boltaudit' ) ) . '">' . __( 'Settings', 'boltaudit' ) . '</a>';
+		array_unshift( $links, $settings_link );
+		return $links;
 	}
 }
