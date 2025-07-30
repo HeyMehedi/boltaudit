@@ -36,8 +36,6 @@ final class BoltAudit {
 	public function load() {
 		register_activation_hook( __FILE__, [$this, 'on_activation'] );
 
-		$this->define_constants();
-
 		$application = App::instance();
 
 		$application->boot( __FILE__, __DIR__ );
@@ -56,10 +54,6 @@ final class BoltAudit {
 				do_action( 'boltaudit_after_load' );
 			}
 		);
-	}
-
-	public function define_constants(): void {
-		define( 'BOLTAUDIT_PLUGIN_FILE', __FILE__ );
 	}
 
 	public function on_activation(): void {
