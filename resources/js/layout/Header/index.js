@@ -47,6 +47,11 @@ const Header = (props) => {
             src={Logo}
             alt="Logo"
           />
+           <div className="ba-dashboard__content__overview__badge">
+            <span className="ba-dashboard__content__overview__badge__single inactive">
+              v0.0.6(beta)
+            </span>
+          </div>
         </Link>
 			) : (
 				<button
@@ -150,6 +155,7 @@ const Header = (props) => {
           </div>
         </div> */}
       </div>
+     
     </header>
   );
 };
