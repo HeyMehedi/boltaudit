@@ -69,6 +69,10 @@ Total DB size, number of tables (empty vs. used), autoloaded options, transients
 
 == Changelog ==
 
+= 0.0.6 – 2025-07-30 =  
+* Introduced WooCommerce Performance Insights Section  
+* Added “Settings” link in the plugin page area for quicker navigation 
+* Fixed plugin fetch error  
 
 = 0.0.5 – 2025-07-25 =  
 * Added asset impact metrics: script/style file size and load duration  
