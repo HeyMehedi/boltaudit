@@ -48,7 +48,7 @@ class MenuServiceProvider implements Provider {
 	}
 
 	public function add_settings_link( $links ) {
-		$settings_link = '<a href="' . esc_url( admin_url( 'tools.php?page=boltaudit' ) ) . '">' . __( 'Settings', 'boltaudit' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( admin_url( 'tools.php?page=boltaudit' ) ) . '">' . __( 'Open BoltAudit', 'boltaudit' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
