@@ -4,13 +4,14 @@ namespace BoltAudit\App\Repositories;
 class PostsRepository {
 
 	// Cache properties to store results once queried
-	protected static ?int $cached_total_posts         = null;
-	protected static ?array $cached_post_types        = null;
-	protected static ?int $cached_revisions           = null;
-	protected static ?int $cached_post_meta_total     = null;
-	protected static ?array $cached_post_meta_by_type = null;
-	protected static ?array $cached_percentages       = null;
-	protected static ?array $cached_suggestions       = null;
+	protected static ?int $cached_total_posts          = null;
+	protected static ?array $cached_post_types         = null;
+	protected static ?array $cached_post_types_orphans = [];
+	protected static ?int $cached_revisions            = null;
+	protected static ?int $cached_post_meta_total      = null;
+	protected static ?array $cached_post_meta_by_type  = null;
+	protected static ?array $cached_percentages        = null;
+	protected static ?array $cached_suggestions        = null;
 
 	public static function get_posts_count() {
 		if ( null !== self::$cached_total_posts ) {
@@ -49,6 +50,7 @@ class PostsRepository {
 			if ( ! in_array( $post_type, $registered, true ) ) {
 				$orphan_count += $count;
 				unset( $output[$post_type] ); // we'll bucket them under _orphaned_posts
+				self::$cached_post_types_orphans[$post_type] = $count;
 			}
 		}
 
@@ -179,6 +181,10 @@ class PostsRepository {
 		return (int) $wpdb->get_var( $query );
 	}
 
+	public static function get_orphaned_post_types() {
+		return self::$cached_post_types_orphans ?? [];
+	}
+
 	public static function get_suggestions() {
 		if ( null !== self::$cached_suggestions ) {
 			return self::$cached_suggestions;
@@ -238,13 +244,14 @@ class PostsRepository {
 
 	public static function get_all() {
 		return [
-			'total_posts'              => self::get_posts_count(),
-			'post_types'               => self::get_post_type_counts(),
-			'revisions'                => self::get_post_revisions_count(),
-			'post_meta_total'          => self::get_post_meta_count(),
-			'post_meta_by_type'        => self::get_post_type_meta_counts(),
-			'percentages'              => self::get_percentage_breakdown(),
-			'suggestions'              => self::get_suggestions(),
+			'total_posts'         => self::get_posts_count(),
+			'post_types'          => self::get_post_type_counts(),
+			'post_types_orphaned' => self::get_orphaned_post_types(),
+			'revisions'           => self::get_post_revisions_count(),
+			'post_meta_total'     => self::get_post_meta_count(),
+			'post_meta_by_type'   => self::get_post_type_meta_counts(),
+			'percentages'         => self::get_percentage_breakdown(),
+			'suggestions'         => self::get_suggestions(),
 		];
 	}
 }
