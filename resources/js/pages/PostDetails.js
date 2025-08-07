@@ -25,7 +25,7 @@ const PostDetailsPage = () => {
   }, []);
 
   return (
-    <AppLayout>
+    <AppLayout type="detailsHeader" page="postDetails">
       <div className="ba-dashboard__content">
         <div className="ba-dashboard__content__wrapper">
           <PostDetailsModule data={data} />

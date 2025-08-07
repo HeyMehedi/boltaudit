@@ -255,9 +255,20 @@ class PostsRepository {
                 ];
         }
 
+        /**
+         * Retrieve detailed information for each post type including counts,
+         * metadata and their relative percentages. Results are grouped by
+         * registered and orphaned post types to make it easy to analyse and
+         * clean up content.
+         */
         public static function get_all_details() {
                 $post_types = self::get_post_type_counts();
                 $post_meta  = self::get_post_type_meta_counts();
+
+                // Calculate percentage breakdowns once to avoid repeated work.
+                $percentages      = self::get_percentage_breakdown();
+                $post_type_perc   = $percentages['post_type_percentage'] ?? [];
+                $post_meta_perc   = $percentages['post_meta_percentage'] ?? [];
 
                 $registered = [];
                 foreach ( $post_types as $type => $count ) {
@@ -266,16 +277,20 @@ class PostsRepository {
                         }
 
                         $registered[ $type ] = [
-                                'count' => $count,
-                                'meta'  => $post_meta[ $type ] ?? 0,
+                                'count'           => $count,
+                                'meta'            => $post_meta[ $type ] ?? 0,
+                                'percentage'      => $post_type_perc[ $type ] ?? 0,
+                                'meta_percentage' => $post_meta_perc[ $type ] ?? 0,
                         ];
                 }
 
                 $orphaned = [];
                 foreach ( self::get_orphaned_post_types() as $type => $count ) {
                         $orphaned[ $type ] = [
-                                'count' => $count,
-                                'meta'  => $post_meta[ $type ] ?? 0,
+                                'count'           => $count,
+                                'meta'            => $post_meta[ $type ] ?? 0,
+                                'percentage'      => $post_type_perc[ $type ] ?? 0,
+                                'meta_percentage' => $post_meta_perc[ $type ] ?? 0,
                         ];
                 }
 
