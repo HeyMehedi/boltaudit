@@ -1,7 +1,11 @@
 import ContentLoading from "@components/ContentLoading";
 import CountUp from "@components/CountUp";
 import postData from "@helper/postData";
+import ReactSVG from "react-inlinesvg";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "@wordpress/element";
+
+import arrowRightIcon from "@icon/arrow-right.svg";
 
 export default function PostSection() {
   const [dataFetched, setDataFetched] = useState(false);
@@ -36,12 +40,15 @@ export default function PostSection() {
         See how many posts, pages, and custom content types your site has—plus how much metadata is attached.<br/>
         Quickly spot unused or bloated content types that may be slowing things down.
       </p>
-      {/* <a
-        href="#"
-        className="ba-dashboard__content__section__btn ba-dashboard__btn"
+      <Link
+        to="/posts"
+        className="ba-dashboard__content__overview__btn ba-dashboard__btn"
       >
-        Security analytics documentation
-      </a> */}
+        <span className="bs-dashboard-tooltip">
+          Open Detailed Report{" "}
+          <ReactSVG src={arrowRightIcon} width={16} height={16} />
+        </span>
+      </Link>
       <div className="ba-dashboard__content__section__content">
         <div className="ba-dashboard__content__section__overview">
           <div className="ba-dashboard__content__section__overview__single">

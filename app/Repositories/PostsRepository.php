@@ -242,16 +242,49 @@ class PostsRepository {
 		return $suggestions;
 	}
 
-	public static function get_all() {
-		return [
-			'total_posts'         => self::get_posts_count(),
-			'post_types'          => self::get_post_type_counts(),
-			'post_types_orphaned' => self::get_orphaned_post_types(),
-			'revisions'           => self::get_post_revisions_count(),
-			'post_meta_total'     => self::get_post_meta_count(),
-			'post_meta_by_type'   => self::get_post_type_meta_counts(),
-			'percentages'         => self::get_percentage_breakdown(),
-			'suggestions'         => self::get_suggestions(),
-		];
-	}
+        public static function get_all() {
+                return [
+                        'total_posts'         => self::get_posts_count(),
+                        'post_types'          => self::get_post_type_counts(),
+                        'post_types_orphaned' => self::get_orphaned_post_types(),
+                        'revisions'           => self::get_post_revisions_count(),
+                        'post_meta_total'     => self::get_post_meta_count(),
+                        'post_meta_by_type'   => self::get_post_type_meta_counts(),
+                        'percentages'         => self::get_percentage_breakdown(),
+                        'suggestions'         => self::get_suggestions(),
+                ];
+        }
+
+        public static function get_all_details() {
+                $post_types = self::get_post_type_counts();
+                $post_meta  = self::get_post_type_meta_counts();
+
+                $registered = [];
+                foreach ( $post_types as $type => $count ) {
+                        if ( '_orphaned_posts' === $type ) {
+                                continue;
+                        }
+
+                        $registered[ $type ] = [
+                                'count' => $count,
+                                'meta'  => $post_meta[ $type ] ?? 0,
+                        ];
+                }
+
+                $orphaned = [];
+                foreach ( self::get_orphaned_post_types() as $type => $count ) {
+                        $orphaned[ $type ] = [
+                                'count' => $count,
+                                'meta'  => $post_meta[ $type ] ?? 0,
+                        ];
+                }
+
+                return [
+                        'total_posts'     => self::get_posts_count(),
+                        'post_meta_total' => self::get_post_meta_count(),
+                        'revisions'       => self::get_post_revisions_count(),
+                        'registered'      => $registered,
+                        'orphaned'        => $orphaned,
+                ];
+        }
 }
