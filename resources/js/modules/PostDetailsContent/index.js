@@ -11,8 +11,15 @@ export default function PostDetailsModule({ data }) {
 
   return (
     <>
-      <div className="ba-dashboard__content__section">
+      <div
+        id="ba-dashboard__post_summary"
+        className="ba-dashboard__content__section"
+      >
         <h4 className="ba-dashboard__content__section__title">Post Summary</h4>
+        <p className="ba-dashboard__content__section__desc">
+          A quick overview of your site's content footprint including total
+          posts, metadata and revisions.
+        </p>
         <div className="ba-dashboard__content__section__overview">
           <div className="ba-dashboard__content__section__overview__single">
             <span className="ba-dashboard__content__section__overview__title">
@@ -49,8 +56,17 @@ export default function PostDetailsModule({ data }) {
         </div>
       </div>
 
-      <div className="ba-dashboard__content__section">
-        <h4 className="ba-dashboard__content__section__title">Registered Post Types</h4>
+      <div
+        id="ba-dashboard__registered_post_types"
+        className="ba-dashboard__content__section"
+      >
+        <h4 className="ba-dashboard__content__section__title">
+          Registered Post Types
+        </h4>
+        <p className="ba-dashboard__content__section__desc">
+          Breakdown of all post types currently registered on your site and
+          their associated metadata.
+        </p>
         <div className="ba-dashboard__content__section__data">
           <table>
             <thead>
@@ -64,8 +80,28 @@ export default function PostDetailsModule({ data }) {
               {registered.map(([type, info]) => (
                 <tr key={type}>
                   <td>{type}</td>
-                  <td>{info.count}</td>
-                  <td>{info.meta}</td>
+                  <td>
+                    <span className="data-wrapper">
+                      <span className="data-count">{info.count}</span>
+                      <span className="data-progress-wrapper">
+                        <span
+                          className="data-progress"
+                          style={{ width: `${info.percentage}%` }}
+                        ></span>
+                      </span>
+                    </span>
+                  </td>
+                  <td>
+                    <span className="data-wrapper">
+                      <span className="data-count">{info.meta}</span>
+                      <span className="data-progress-wrapper">
+                        <span
+                          className="data-progress"
+                          style={{ width: `${info.meta_percentage}%` }}
+                        ></span>
+                      </span>
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -73,8 +109,17 @@ export default function PostDetailsModule({ data }) {
         </div>
       </div>
 
-      <div className="ba-dashboard__content__section">
-        <h4 className="ba-dashboard__content__section__title">Orphaned Post Types</h4>
+      <div
+        id="ba-dashboard__orphan_post_types"
+        className="ba-dashboard__content__section"
+      >
+        <h4 className="ba-dashboard__content__section__title">
+          Orphaned Post Types
+        </h4>
+        <p className="ba-dashboard__content__section__desc">
+          Unregistered post types that still exist in the database. Review and
+          clean up if necessary.
+        </p>
         <div className="ba-dashboard__content__section__data">
           {orphan.length > 0 ? (
             <table>
@@ -89,8 +134,28 @@ export default function PostDetailsModule({ data }) {
                 {orphan.map(([type, info]) => (
                   <tr key={type}>
                     <td>{type}</td>
-                    <td>{info.count}</td>
-                    <td>{info.meta}</td>
+                    <td>
+                      <span className="data-wrapper">
+                        <span className="data-count">{info.count}</span>
+                        <span className="data-progress-wrapper">
+                          <span
+                            className="data-progress"
+                            style={{ width: `${info.percentage}%` }}
+                          ></span>
+                        </span>
+                      </span>
+                    </td>
+                    <td>
+                      <span className="data-wrapper">
+                        <span className="data-count">{info.meta}</span>
+                        <span className="data-progress-wrapper">
+                          <span
+                            className="data-progress"
+                            style={{ width: `${info.meta_percentage}%` }}
+                          ></span>
+                        </span>
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>

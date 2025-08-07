@@ -6,14 +6,31 @@ const Sidebar = (props) => {
   const [activeSection, setActiveSection] = useState("");
   const [isSidebarFixed, setIsSidebarFixed] = useState(false);
 
-  const type = props.type;
+  const { page } = props;
 
+  // Determine which sections to display based on the current page. This keeps
+  // the navigation focused and relevant.
   const sections =
-    type === "detailsHeader"
+    page === "pluginDetails"
       ? [
           {
             id: "ba-dashboard__styles_scripts",
             name: "Assets",
+          },
+        ]
+      : page === "postDetails"
+      ? [
+          {
+            id: "ba-dashboard__post_summary",
+            name: "Post Summary",
+          },
+          {
+            id: "ba-dashboard__registered_post_types",
+            name: "Registered",
+          },
+          {
+            id: "ba-dashboard__orphan_post_types",
+            name: "Orphaned",
           },
         ]
       : [
@@ -37,7 +54,7 @@ const Sidebar = (props) => {
                 },
               ]
             : []),
-                      {
+          {
             id: "ba-dashboard__environment",
             name: "Environment",
           },
