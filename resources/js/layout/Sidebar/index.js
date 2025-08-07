@@ -6,14 +6,31 @@ const Sidebar = (props) => {
   const [activeSection, setActiveSection] = useState("");
   const [isSidebarFixed, setIsSidebarFixed] = useState(false);
 
-  const type = props.type;
+  const { page } = props;
 
+  // Determine which sections to display based on the current page. This keeps
+  // the navigation focused and relevant.
   const sections =
-    type === "detailsHeader"
+    page === "pluginDetails"
       ? [
           {
             id: "ba-dashboard__styles_scripts",
             name: "Assets",
+          },
+        ]
+      : page === "postDetails"
+      ? [
+          {
+            id: "ba-dashboard__post_summary",
+            name: "Post Summary",
+          },
+          {
+            id: "ba-dashboard__registered_post_types",
+            name: "Registered",
+          },
+          {
+            id: "ba-dashboard__orphan_post_types",
+            name: "Orphaned",
           },
         ]
       : [
@@ -37,14 +54,26 @@ const Sidebar = (props) => {
                 },
               ]
             : []),
-                      {
+          {
             id: "ba-dashboard__environment",
             name: "Environment",
           },
         ];
 
+  // Scroll to the selected section without altering the hash based route. When
+  // using a HashRouter the application route lives in the URL hash. Linking
+  // directly to `#section` would overwrite that route and bounce the user back
+  // to the overview page. Instead we intercept the click, update the active
+  // state, and smoothly scroll to the relevant element.
   function handleSection(item) {
     setActiveSection(item);
+
+    const el = document.getElementById(item);
+    if (el) {
+      window.requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   }
 
   useEffect(() => {
@@ -81,11 +110,14 @@ const Sidebar = (props) => {
         {sections.map((section) => (
           <li key={section.id} className="ba-dashboard__sidebar__menu__item">
             <a
-              href={`#${section.id}`}
+              href="#"
               className={`ba-dashboard__sidebar__menu__link ${
                 activeSection === section.id ? "active" : ""
               }`}
-              onClick={() => handleSection(section.id)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSection(section.id);
+              }}
             >
               <ReactSVG src={menuIcon} width={20} height={20} />
               {section.name}

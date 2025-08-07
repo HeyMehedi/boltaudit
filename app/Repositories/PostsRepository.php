@@ -125,29 +125,46 @@ class PostsRepository {
 			return self::$cached_percentages;
 		}
 
-		$total_posts       = self::get_posts_count();
-		$total_postmeta    = self::get_post_meta_count();
-		$post_type_counts  = self::get_post_type_counts();
-		$post_meta_by_type = self::get_post_type_meta_counts();
+                $total_posts        = self::get_posts_count();
+                $total_postmeta     = self::get_post_meta_count();
+                $post_type_counts   = self::get_post_type_counts();
+                $orphan_type_counts = self::get_orphaned_post_types();
+                $post_meta_by_type  = self::get_post_type_meta_counts();
 
-		$percent_post_types = [];
-		$percent_meta_types = [];
+                $percent_post_types = [];
+                $percent_meta_types = [];
 
-		foreach ( $post_type_counts as $type => $count ) {
-			$percent_post_types[$type] = $total_posts > 0 ? round( ( $count / $total_posts ) * 100, 2 ) : 0;
-		}
+                // Registered post type percentages.
+                foreach ( $post_type_counts as $type => $count ) {
+                        if ( '_orphaned_posts' === $type ) {
+                                continue;
+                        }
 
-		foreach ( $post_meta_by_type as $type => $count ) {
-			$percent_meta_types[$type] = $total_postmeta > 0 ? round( ( $count / $total_postmeta ) * 100, 2 ) : 0;
-		}
+                        $percent_post_types[ $type ] = $total_posts > 0 ? round( ( $count / $total_posts ) * 100, 2 ) : 0;
+                }
 
-		self::$cached_percentages = [
-			'post_type_percentage' => $percent_post_types,
-			'post_meta_percentage' => $percent_meta_types,
-		];
+                // Percentages for individual orphaned post types.
+                foreach ( $orphan_type_counts as $type => $count ) {
+                        $percent_post_types[ $type ] = $total_posts > 0 ? round( ( $count / $total_posts ) * 100, 2 ) : 0;
+                }
 
-		return self::$cached_percentages;
-	}
+                // Aggregate orphan percentage under a single key for overall metrics.
+                if ( ! empty( $orphan_type_counts ) ) {
+                        $percent_post_types['_orphaned_posts'] = $total_posts > 0 ? round( ( array_sum( $orphan_type_counts ) / $total_posts ) * 100, 2 ) : 0;
+                }
+
+                // Meta percentages include both registered and orphaned types plus orphaned meta.
+                foreach ( $post_meta_by_type as $type => $count ) {
+                        $percent_meta_types[ $type ] = $total_postmeta > 0 ? round( ( $count / $total_postmeta ) * 100, 2 ) : 0;
+                }
+
+                self::$cached_percentages = [
+                        'post_type_percentage' => $percent_post_types,
+                        'post_meta_percentage' => $percent_meta_types,
+                ];
+
+                return self::$cached_percentages;
+        }
 
 	public static function get_orphaned_post_meta_count() {
 		global $wpdb;
@@ -255,9 +272,20 @@ class PostsRepository {
                 ];
         }
 
+        /**
+         * Retrieve detailed information for each post type including counts,
+         * metadata and their relative percentages. Results are grouped by
+         * registered and orphaned post types to make it easy to analyse and
+         * clean up content.
+         */
         public static function get_all_details() {
                 $post_types = self::get_post_type_counts();
                 $post_meta  = self::get_post_type_meta_counts();
+
+                // Calculate percentage breakdowns once to avoid repeated work.
+                $percentages      = self::get_percentage_breakdown();
+                $post_type_perc   = $percentages['post_type_percentage'] ?? [];
+                $post_meta_perc   = $percentages['post_meta_percentage'] ?? [];
 
                 $registered = [];
                 foreach ( $post_types as $type => $count ) {
@@ -266,16 +294,20 @@ class PostsRepository {
                         }
 
                         $registered[ $type ] = [
-                                'count' => $count,
-                                'meta'  => $post_meta[ $type ] ?? 0,
+                                'count'           => $count,
+                                'meta'            => $post_meta[ $type ] ?? 0,
+                                'percentage'      => $post_type_perc[ $type ] ?? 0,
+                                'meta_percentage' => $post_meta_perc[ $type ] ?? 0,
                         ];
                 }
 
                 $orphaned = [];
                 foreach ( self::get_orphaned_post_types() as $type => $count ) {
                         $orphaned[ $type ] = [
-                                'count' => $count,
-                                'meta'  => $post_meta[ $type ] ?? 0,
+                                'count'           => $count,
+                                'meta'            => $post_meta[ $type ] ?? 0,
+                                'percentage'      => $post_type_perc[ $type ] ?? 0,
+                                'meta_percentage' => $post_meta_perc[ $type ] ?? 0,
                         ];
                 }
 
