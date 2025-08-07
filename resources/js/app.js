@@ -6,6 +6,7 @@ import { ThemeProvider } from "styled-components";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const PluginDetailsPage = lazy(() => import("./pages/PluginDetails"));
+const PostDetailsPage = lazy(() => import("./pages/PostDetails"));
 
 function App() {
   const [dir, setDir] = useState("ltr");
@@ -25,10 +26,14 @@ function App() {
       element: <HomePage />,
     },
 
-		{
-			path: `/plugin/:slug`,
-			element: <PluginDetailsPage />,
-		},
+                {
+                        path: `/plugin/:slug`,
+                        element: <PluginDetailsPage />,
+                },
+    {
+      path: `/posts`,
+      element: <PostDetailsPage />,
+    },
   ]);
 
   const preloaderStyle = {
