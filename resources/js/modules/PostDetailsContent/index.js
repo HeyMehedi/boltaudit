@@ -53,6 +53,22 @@ export default function PostDetailsModule({ data }) {
               <CountUp target={data.revisions} />
             </span>
           </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Orphaned Posts
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={data.orphan_posts_total} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Orphaned Meta
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={data.orphan_meta_total} />
+            </span>
+          </div>
         </div>
       </div>
 
