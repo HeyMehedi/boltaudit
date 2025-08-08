@@ -1,4 +1,5 @@
-import { lazy } from "@wordpress/element";
+import { lazy, Suspense } from "@wordpress/element";
+import ContentLoading from "@components/ContentLoading";
 
 const NavSection = lazy(() => import("./NavSection"));
 const QuickInfoSection = lazy(() => import("./QuickInfoSection"));

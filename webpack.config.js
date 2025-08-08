@@ -3,6 +3,8 @@ const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 
 const devHost = "boltaudit.test";
 
+const chunkUniqueKey = Date.now().toString();
+
 module.exports = {
   ...defaultConfig,
   entry: {
@@ -10,9 +12,9 @@ module.exports = {
     "css/app": "./resources/sass/app.scss",
   },
   output: {
-    path: path.resolve(__dirname, "./assets/build/"),
-    filename: "[name].js",
-    clean: false,
+    path: path.resolve( __dirname, './assets/build/' ),
+    filename: '[name].js',
+    chunkFilename: 'chunk/[name].js?ver=' + chunkUniqueKey,
   },
   resolve: {
     alias: {

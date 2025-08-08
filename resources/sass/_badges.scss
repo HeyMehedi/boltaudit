@@ -5,27 +5,28 @@
   font-size: 0.75rem;
   font-weight: 500;
   margin-left: 5px;
-}
-
-.plugin-badge.active {
-  background-color: #d1f5cd; 
-  color: #2e7d32;
-}
-
-.plugin-badge.inactive {
-  background-color: #e0e0e0;
-  color: #757575;
-}
-
-.plugin-badge.community {
-  background-color: #e0f2fe;
-  color: #0369a1;
-}
-.plugin-badge.upgrade {
-  background-color: #fef9c3;
-  color: #92400e;
-}
-.plugin-badge.abandoned {
-  background-color: #fee2e2;
-  color: #991b1b;
+  &.active {
+    background-color: #d1f5cd; 
+    color: #2e7d32;
+  }
+  &.inactive {
+    background-color: #e0e0e0;
+    color: #757575;
+  }
+  &.community {
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+  &.upgrade {
+    background-color: #fef9c3;
+    color: #92400e;
+  }
+  &.abandoned {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  &.enqueued {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
 }
