@@ -25,11 +25,10 @@ function App() {
       path: `/*`,
       element: <HomePage />,
     },
-
-                {
-                        path: `/plugin/:slug`,
-                        element: <PluginDetailsPage />,
-                },
+    {
+      path: `/plugin/:slug`,
+      element: <PluginDetailsPage />,
+    },
     {
       path: `/posts`,
       element: <PostDetailsPage />,
