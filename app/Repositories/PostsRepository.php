@@ -186,22 +186,29 @@ class PostsRepository {
 			];
 		}
 
-		$orphaned = [];
-		foreach ( self::get_orphaned_post_types() as $type => $count ) {
-			$orphaned[$type] = [
-				'count'           => $count,
-				'meta'            => $post_meta[$type] ?? 0,
-				'percentage'      => $post_type_percentage[$type] ?? 0,
-				'meta_percentage' => $post_meta_percentage[$type] ?? 0,
-			];
-		}
+               $orphaned           = [];
+               $orphan_post_total  = 0;
+               $orphan_meta_total  = 0;
+               foreach ( self::get_orphaned_post_types() as $type => $count ) {
+                       $meta_count          = $post_meta[$type] ?? 0;
+                       $orphan_post_total  += $count;
+                       $orphan_meta_total  += $meta_count;
+                       $orphaned[$type]     = [
+                               'count'           => $count,
+                               'meta'            => $meta_count,
+                               'percentage'      => $post_type_percentage[$type] ?? 0,
+                               'meta_percentage' => $post_meta_percentage[$type] ?? 0,
+                       ];
+               }
 
-		return [
-			'total_posts'     => self::get_posts_count(),
-			'post_meta_total' => self::get_meta_count(),
-			'revisions'       => self::get_revisions_count(),
-			'registered'      => $registered,
-			'orphaned'        => $orphaned,
-		];
+               return [
+                       'total_posts'        => self::get_posts_count(),
+                       'post_meta_total'    => self::get_meta_count(),
+                       'revisions'          => self::get_revisions_count(),
+                       'registered'         => $registered,
+                       'orphaned'           => $orphaned,
+                       'orphan_posts_total' => $orphan_post_total,
+                       'orphan_meta_total'  => $orphan_meta_total,
+               ];
 	}
 }
