@@ -1,13 +1,14 @@
 // Content
 .ba-dashboard__content {
   display: flex;
-  gap: 32px;
-  padding: 40px 32px;
+  width: 100%;
   box-sizing: border-box;
   background: #f0f0f1;
   &__wrapper {
     display: flex;
     gap: 48px;
+    flex: 1;
+    padding: 40px 32px;
     flex-direction: column;
   }
   &__section {
@@ -35,7 +36,7 @@
       font-weight: 700;
       line-height: 1.2;
       color: var(--ba-dashboard-dark-color);
-      margin: 0 0 6px;
+      margin: 0 0 20px;
       &--recommendation {
         font-size: 14px;
         font-weight: 600;
@@ -60,7 +61,7 @@
     }
     &__overview {
       display: flex;
-      gap: 24px;
+      gap: 20px;
       align-items: center;
       flex-wrap: wrap;
       align-items: stretch;
@@ -74,7 +75,7 @@
         background-color: var(--ba-dashboard-section-bg-color);
         border-radius: 8px;
         flex: 0 0 25%;
-        max-width: 22.91%;
+        max-width: 22%;
         box-sizing: border-box;
       }
       &__title {
@@ -93,88 +94,6 @@
     }
     &__data {
       margin-top: 20px;
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        th {
-          width: auto;
-          min-width: 120px;
-          height: 40px;
-          font-size: 14px;
-          font-weight: 600;
-          line-height: 1.2;
-          text-align: center;
-          padding: 0 16px;
-          color: var(--ba-dashboard-title-color);
-          background-color: var(--ba-dashboard-section-border-color);
-          box-sizing: border-box;
-          &:first-child {
-            text-align: left;
-            border-radius: 8px 0 0 0;
-          }
-          &:last-child {
-            width: 160px;
-            text-align: right;
-            border-radius: 0 8px 0 0;
-          }
-          .bs-dashboard-tooltip {
-            top: 4px;
-            margin-left: 6px;
-          }
-        }
-        tbody {
-          tr {
-            &:last-child {
-              td {
-                &:first-child {
-                  border-radius: 0 0 0 8px;
-                }
-                &:last-child {
-                  border-radius: 0 0 8px 0;
-                }
-              }
-            }
-          }
-        }
-        td {
-          height: 40px;
-          padding: 0 16px;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 1.2;
-          text-align: center;
-          color: var(--ba-dashboard-dark-color);
-          border-top: 1px solid var(--ba-dashboard-section-border-color);
-          border-bottom: 1px solid var(--ba-dashboard-section-border-color);
-           &:first-child {
-            border-left: 1px solid var(--ba-dashboard-section-border-color);
-          }
-          &:last-child {
-            border-right: 1px solid var(--ba-dashboard-section-border-color);
-          }
-          &.plugin-name {
-            display: flex;
-            align-items: center;
-            padding-top: 5px;
-            padding-bottom: 5px;
-          }
-          a {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-            color: var(--ba-dashboard-primary-color);
-            &.action {
-              justify-content: end;
-            }
-          }
-          &:first-child {
-            text-align: left;
-          }
-          &:last-child {
-            text-align: right;
-          }
-        }
-      }
       &__post {
         th {
           font-size: 16px !important;
@@ -299,6 +218,11 @@
   &__sidebar {
     width: 230px;
     min-width: 230px;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 40px 24px;
+    background-color: #ffffff;
+    border-left: 1px solid var(--ba-dashboard-border-color);
     &__widget {
       display: flex;
       gap: 24px;
@@ -377,12 +301,15 @@
           gap: 8px;
           align-items: center;
           flex-wrap: wrap;
-          min-height: 30px;
+          padding: 5px 0;
           margin: 0;
           font-size: 12px;
           font-weight: 500;
           line-height: 1.6;
           border-bottom: 1px solid var(--ba-dashboard-section-border-color);
+          &:last-child {
+            padding-bottom: 12px;
+          }
           .info-value {
             display: flex;
             gap: 6px;

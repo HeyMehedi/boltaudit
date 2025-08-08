@@ -1,6 +1,6 @@
 import AppLayout from "@layout/AppLayout";
-import HomepageContentModule from "@modules/HomepageContent";
 import HomepageContentSidebarModule from "@modules/HomepageContentSidebar";
+import HomepageContentModule from "@modules/HomepageContent";
 
 const SectionContent = () => {
   return (

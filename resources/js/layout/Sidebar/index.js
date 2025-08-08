@@ -1,33 +1,79 @@
 import { useEffect, useState } from "@wordpress/element";
 import ReactSVG from "react-inlinesvg";
-
 import menuIcon from "@icon/reader.svg";
-
-const sections = [
-  {
-    id: "ba-dashboard__post",
-    name: "Post Types",
-  },
-  {
-    id: "ba-dashboard__database",
-    name: "Database",
-  },
-  {
-    id: "ba-dashboard__plugins",
-    name: "Plugins",
-  },
-  {
-    id: "ba-dashboard__environment",
-    name: "Environment",
-  },
-];
 
 const Sidebar = (props) => {
   const [activeSection, setActiveSection] = useState("");
   const [isSidebarFixed, setIsSidebarFixed] = useState(false);
 
+  const { page } = props;
+
+  // Determine which sections to display based on the current page. This keeps
+  // the navigation focused and relevant.
+  const sections =
+    page === "pluginDetails"
+      ? [
+          {
+            id: "ba-dashboard__styles_scripts",
+            name: "Assets",
+          },
+        ]
+      : page === "postDetails"
+      ? [
+          {
+            id: "ba-dashboard__post_summary",
+            name: "Summary",
+          },
+          {
+            id: "ba-dashboard__registered_post_types",
+            name: "Registered",
+          },
+          {
+            id: "ba-dashboard__orphan_post_types",
+            name: "Orphaned",
+          },
+        ]
+      : [
+          {
+            id: "ba-dashboard__post",
+            name: "Post Types",
+          },
+          {
+            id: "ba-dashboard__database",
+            name: "Database",
+          },
+          {
+            id: "ba-dashboard__plugins",
+            name: "Plugins",
+          },
+          ...(boltaudit_data?.hasWooCommerce
+            ? [
+                {
+                  id: "ba-dashboard__woocommerce",
+                  name: "WooCommerce",
+                },
+              ]
+            : []),
+          {
+            id: "ba-dashboard__environment",
+            name: "Environment",
+          },
+        ];
+
+  // Scroll to the selected section without altering the hash based route. When
+  // using a HashRouter the application route lives in the URL hash. Linking
+  // directly to `#section` would overwrite that route and bounce the user back
+  // to the overview page. Instead we intercept the click, update the active
+  // state, and smoothly scroll to the relevant element.
   function handleSection(item) {
     setActiveSection(item);
+
+    const el = document.getElementById(item);
+    if (el) {
+      window.requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   }
 
   useEffect(() => {
@@ -52,7 +98,7 @@ const Sidebar = (props) => {
     handleScroll(); // initialize on mount
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sections]); // include in dependency
 
   return (
     <aside
@@ -64,11 +110,14 @@ const Sidebar = (props) => {
         {sections.map((section) => (
           <li key={section.id} className="ba-dashboard__sidebar__menu__item">
             <a
-              href={`#${section.id}`}
+              href="#"
               className={`ba-dashboard__sidebar__menu__link ${
                 activeSection === section.id ? "active" : ""
               }`}
-              onClick={() => handleSection(section.id)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSection(section.id);
+              }}
             >
               <ReactSVG src={menuIcon} width={20} height={20} />
               {section.name}

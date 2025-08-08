@@ -18,10 +18,28 @@ class PluginMetricsCollector {
 	}
 
 	protected function collect_now(): array {
+		$scripts = $this->merge_registered_and_enqueued(
+			$this->get_scripts_by_plugin(),
+			$this->get_enqueued_scripts_by_plugin()
+		);
+
+		$styles = $this->merge_registered_and_enqueued(
+			$this->get_styles_by_plugin(),
+			$this->get_enqueued_styles_by_plugin()
+		);
+
+		$enqueued = array_filter(
+			array_merge( $scripts, $styles ),
+			fn( $asset ) => ! empty( $asset['enqueued'] )
+		);
+
 		return [
-			'scripts' => $this->merge_registered_and_enqueued( $this->get_scripts_by_plugin(), $this->get_enqueued_scripts_by_plugin() ),
-			'styles'  => $this->merge_registered_and_enqueued( $this->get_styles_by_plugin(), $this->get_enqueued_styles_by_plugin() ),
-			'hooks'   => $this->get_hooks_by_plugin(),
+			'scripts'        => $scripts,
+			'styles'         => $styles,
+			'scripts_count'  => count( $scripts ),
+			'styles_count'   => count( $styles ),
+			'enqueued_count' => count( $enqueued ),
+			'hooks'          => $this->get_hooks_by_plugin(),
 		];
 	}
 
@@ -108,7 +126,7 @@ class PluginMetricsCollector {
 			}
 		}
 
-		return $found;
+		return $this->enrich_asset_metrics( $found );
 	}
 
 	public function get_enqueued_scripts_by_plugin(): array {
@@ -133,7 +151,7 @@ class PluginMetricsCollector {
 			}
 		}
 
-		return $found;
+		return $this->enrich_asset_metrics( $found );
 	}
 
 	public function get_enqueued_styles_by_plugin(): array {
@@ -148,4 +166,35 @@ class PluginMetricsCollector {
 
 		return $found;
 	}
+
+	protected function enrich_asset_metrics( array $assets ): array {
+		foreach ( $assets as &$asset ) {
+			$full_url = $asset['src'];
+
+			// Only handle full URLs
+			if ( ! filter_var( $full_url, FILTER_VALIDATE_URL ) ) {
+				$asset['load_time_ms'] = null;
+				$asset['size_kb']      = null;
+				continue;
+			}
+
+			$start    = microtime( true );
+			$response = wp_remote_get( $full_url );
+			$elapsed  = ( microtime( true ) - $start ) * 1000;
+
+			if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+				$asset['load_time_ms'] = null;
+				$asset['size_kb']      = null;
+				continue;
+			}
+
+			$asset['load_time_ms'] = round( $elapsed, 2 );
+			$asset_body            = wp_remote_retrieve_body( $response );
+			$size_bytes            = strlen( $asset_body );
+			$asset['size_kb']      = round( $size_bytes / 1024, 2 ); // Convert to kilobytes
+		}
+
+		return $assets;
+	}
+
 }

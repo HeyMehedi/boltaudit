@@ -5,6 +5,8 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
+const PluginDetailsPage = lazy(() => import("./pages/PluginDetails"));
+const PostDetailsPage = lazy(() => import("./pages/PostDetails"));
 
 function App() {
   const [dir, setDir] = useState("ltr");
@@ -22,6 +24,14 @@ function App() {
     {
       path: `/*`,
       element: <HomePage />,
+    },
+    {
+      path: `/plugin/:slug`,
+      element: <PluginDetailsPage />,
+    },
+    {
+      path: `/posts`,
+      element: <PostDetailsPage />,
     },
   ]);
 

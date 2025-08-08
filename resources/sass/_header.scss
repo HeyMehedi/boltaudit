@@ -9,14 +9,21 @@
   &__logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     height: 100%;
-    width: 280px;
-    border-right: 1px solid var(--ba-dashboard-border-color);
+    // width: 280px;
     padding: 15px 24px 15px;
     box-sizing: border-box;
     img {
       height: 25px;
+    }
+  }
+  &__return {
+    padding: 24px;
+    &:hover {
+      svg path {
+        fill: var(--ba-dashboard-primary-color);
+      }
     }
   }
   &__content {
