@@ -24,7 +24,7 @@ class PostsRepository {
 		return self::$cached_total_posts;
 	}
 
-	public static function get_post_type_counts() {
+	public static function get_type_counts() {
 		if ( null !== self::$cached_post_types ) {
 			return self::$cached_post_types;
 		}
@@ -63,7 +63,7 @@ class PostsRepository {
 		return $output;
 	}
 
-	public static function get_post_revisions_count() {
+	public static function get_revisions_count() {
 		if ( null !== self::$cached_revisions ) {
 			return self::$cached_revisions;
 		}
@@ -74,7 +74,7 @@ class PostsRepository {
 		return self::$cached_revisions;
 	}
 
-	public static function get_post_meta_count() {
+	public static function get_meta_count() {
 		if ( null !== self::$cached_post_meta_total ) {
 			return self::$cached_post_meta_total;
 		}
@@ -85,7 +85,7 @@ class PostsRepository {
 		return self::$cached_post_meta_total;
 	}
 
-	public static function get_post_type_meta_counts() {
+	public static function get_type_wise_meta_counts() {
 		if ( null !== self::$cached_post_meta_by_type ) {
 			return self::$cached_post_meta_by_type;
 		}
@@ -126,10 +126,10 @@ class PostsRepository {
 		}
 
 		$total_posts        = self::get_posts_count();
-		$total_postmeta     = self::get_post_meta_count();
-		$post_type_counts   = self::get_post_type_counts();
+		$total_postmeta     = self::get_meta_count();
+		$post_type_counts   = self::get_type_counts();
 		$orphan_type_counts = self::get_orphaned_post_types();
-		$post_meta_by_type  = self::get_post_type_meta_counts();
+		$post_meta_by_type  = self::get_type_wise_meta_counts();
 
 		$percent_post_types = [];
 		$percent_meta_types = [];
@@ -166,7 +166,7 @@ class PostsRepository {
 		return self::$cached_percentages;
 	}
 
-	public static function get_orphaned_post_meta_count() {
+	public static function get_orphaned_meta_count() {
 		global $wpdb;
 
 		// Meta records with no matching post
@@ -205,11 +205,11 @@ class PostsRepository {
 	public static function get_all() {
 		return [
 			'total_posts'         => self::get_posts_count(),
-			'post_types'          => self::get_post_type_counts(),
+			'post_types'          => self::get_type_counts(),
 			'post_types_orphaned' => self::get_orphaned_post_types(),
-			'revisions'           => self::get_post_revisions_count(),
-			'post_meta_total'     => self::get_post_meta_count(),
-			'post_meta_by_type'   => self::get_post_type_meta_counts(),
+			'revisions'           => self::get_revisions_count(),
+			'post_meta_total'     => self::get_meta_count(),
+			'post_meta_by_type'   => self::get_type_wise_meta_counts(),
 			'percentages'         => self::get_percentage_breakdown(),
 		];
 	}
@@ -217,17 +217,17 @@ class PostsRepository {
 	/**
 	 * Retrieve detailed information for each post type including counts,
 	 * metadata and their relative percentages. Results are grouped by
-	 * registered and orphaned post types to make it easy to analyse and
+	 * registered and orphaned post types to make it easy to analyze and
 	 * clean up content.
 	 */
 	public static function get_all_details() {
-		$post_types = self::get_post_type_counts();
-		$post_meta  = self::get_post_type_meta_counts();
+		$post_types = self::get_type_counts();
+		$post_meta  = self::get_type_wise_meta_counts();
 
 		// Calculate percentage breakdowns once to avoid repeated work.
-		$percentages    = self::get_percentage_breakdown();
-		$post_type_perc = $percentages['post_type_percentage'] ?? [];
-		$post_meta_perc = $percentages['post_meta_percentage'] ?? [];
+		$percentages          = self::get_percentage_breakdown();
+		$post_type_percentage = $percentages['post_type_percentage'] ?? [];
+		$post_meta_percentage = $percentages['post_meta_percentage'] ?? [];
 
 		$registered = [];
 		foreach ( $post_types as $type => $count ) {
@@ -238,8 +238,8 @@ class PostsRepository {
 			$registered[$type] = [
 				'count'           => $count,
 				'meta'            => $post_meta[$type] ?? 0,
-				'percentage'      => $post_type_perc[$type] ?? 0,
-				'meta_percentage' => $post_meta_perc[$type] ?? 0,
+				'percentage'      => $post_type_percentage[$type] ?? 0,
+				'meta_percentage' => $post_meta_percentage[$type] ?? 0,
 			];
 		}
 
@@ -248,15 +248,15 @@ class PostsRepository {
 			$orphaned[$type] = [
 				'count'           => $count,
 				'meta'            => $post_meta[$type] ?? 0,
-				'percentage'      => $post_type_perc[$type] ?? 0,
-				'meta_percentage' => $post_meta_perc[$type] ?? 0,
+				'percentage'      => $post_type_percentage[$type] ?? 0,
+				'meta_percentage' => $post_meta_percentage[$type] ?? 0,
 			];
 		}
 
 		return [
 			'total_posts'     => self::get_posts_count(),
-			'post_meta_total' => self::get_post_meta_count(),
-			'revisions'       => self::get_post_revisions_count(),
+			'post_meta_total' => self::get_meta_count(),
+			'revisions'       => self::get_revisions_count(),
 			'registered'      => $registered,
 			'orphaned'        => $orphaned,
 		];
