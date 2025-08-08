@@ -68,7 +68,7 @@ export default function PostDetailsModule({ data }) {
           their associated metadata.
         </p>
         <div className="ba-dashboard__content__section__data">
-          <table>
+          <table className="ba-dashboard__content__section__data__post">
             <thead>
               <tr>
                 <th>Post Type</th>
@@ -86,7 +86,11 @@ export default function PostDetailsModule({ data }) {
                       <span className="data-progress-wrapper">
                         <span
                           className="data-progress"
-                          style={{ width: `${info.percentage}%` }}
+                          style={{
+                            width: `${
+                              (info.percentage)
+                            }%`,
+                          }}
                         ></span>
                       </span>
                     </span>
@@ -95,9 +99,13 @@ export default function PostDetailsModule({ data }) {
                     <span className="data-wrapper">
                       <span className="data-count">{info.meta}</span>
                       <span className="data-progress-wrapper">
-                        <span
+                       <span
                           className="data-progress"
-                          style={{ width: `${info.meta_percentage}%` }}
+                          style={{
+                            width: `${
+                              (info.meta_percentage)
+                            }%`,
+                          }}
                         ></span>
                       </span>
                     </span>
@@ -117,12 +125,14 @@ export default function PostDetailsModule({ data }) {
           Orphaned Post Types
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          Unregistered post types that still exist in the database. Review and
-          clean up if necessary.
+          <strong>Heads up:</strong> The post types listed below appear orphaned — meaning their associated plugin may be deactivated, not necessarily removed. These entries remain in your database, but without a registered post type in use.
+        </p>
+        <p className="ba-dashboard__content__section__desc">
+          <strong>Before cleaning anything up, be absolutely sure</strong> the plugin isn’t just temporarily disabled. Deleting these entries without confirming could result in permanent data loss if the plugin is reactivated later.
         </p>
         <div className="ba-dashboard__content__section__data">
           {orphan.length > 0 ? (
-            <table>
+            <table className="ba-dashboard__content__section__data__post">
               <thead>
                 <tr>
                   <th>Post Type</th>
@@ -140,7 +150,11 @@ export default function PostDetailsModule({ data }) {
                         <span className="data-progress-wrapper">
                           <span
                             className="data-progress"
-                            style={{ width: `${info.percentage}%` }}
+                            style={{
+                              width: `${
+                                (info.percentage)
+                              }%`,
+                            }}
                           ></span>
                         </span>
                       </span>
@@ -149,9 +163,13 @@ export default function PostDetailsModule({ data }) {
                       <span className="data-wrapper">
                         <span className="data-count">{info.meta}</span>
                         <span className="data-progress-wrapper">
-                          <span
+                        <span
                             className="data-progress"
-                            style={{ width: `${info.meta_percentage}%` }}
+                            style={{
+                              width: `${
+                                (info.meta_percentage)
+                              }%`,
+                            }}
                           ></span>
                         </span>
                       </span>

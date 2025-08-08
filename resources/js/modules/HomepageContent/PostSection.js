@@ -96,7 +96,7 @@ export default function PostSection() {
             <tbody>
               {Object.entries(postType).map(([key, value]) => (
                 <tr key={key}>
-                  <td>{key.charAt(0).toUpperCase() + key.slice(1)}</td>
+                  <td>{key}</td>
                   <td>
                     <span className="data-wrapper">
                       <span className="data-count">{value.countType}</span>

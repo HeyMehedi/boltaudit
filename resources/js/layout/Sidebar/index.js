@@ -22,7 +22,7 @@ const Sidebar = (props) => {
       ? [
           {
             id: "ba-dashboard__post_summary",
-            name: "Post Summary",
+            name: "Summary",
           },
           {
             id: "ba-dashboard__registered_post_types",
