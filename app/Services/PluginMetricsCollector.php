@@ -116,7 +116,8 @@ class PluginMetricsCollector {
 	public function get_scripts_by_plugin(): array {
 		global $wp_scripts;
 		$found = [];
-		foreach ( $wp_scripts->registered ?? [] as $handle => $data ) {
+                $registered_scripts = $wp_scripts && isset( $wp_scripts->registered ) ? $wp_scripts->registered : [];
+                foreach ( $registered_scripts as $handle => $data ) {
 			if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
 				$found[] = ['handle' => $handle, 'src' => $data->src];
 			}
@@ -128,8 +129,9 @@ class PluginMetricsCollector {
 	public function get_enqueued_scripts_by_plugin(): array {
 		global $wp_scripts;
 		$found = [];
-		foreach ( $wp_scripts->queue ?? [] as $handle ) {
-			$data = $wp_scripts->registered[$handle] ?? null;
+                $queued_scripts = $wp_scripts && isset( $wp_scripts->queue ) ? $wp_scripts->queue : [];
+                foreach ( $queued_scripts as $handle ) {
+                        $data = $wp_scripts && isset( $wp_scripts->registered[$handle] ) ? $wp_scripts->registered[$handle] : null;
 			if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
 				$found[] = ['handle' => $handle, 'src' => $data->src];
 			}
@@ -141,7 +143,8 @@ class PluginMetricsCollector {
 	public function get_styles_by_plugin(): array {
 		global $wp_styles;
 		$found = [];
-		foreach ( $wp_styles->registered ?? [] as $handle => $data ) {
+                $registered_styles = $wp_styles && isset( $wp_styles->registered ) ? $wp_styles->registered : [];
+                foreach ( $registered_styles as $handle => $data ) {
 			if ( isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
 				$found[] = ['handle' => $handle, 'src' => $data->src];
 			}
@@ -153,8 +156,9 @@ class PluginMetricsCollector {
 	public function get_enqueued_styles_by_plugin(): array {
 		global $wp_styles;
 		$found = [];
-		foreach ( $wp_styles->queue ?? [] as $handle ) {
-			$data = $wp_styles->registered[$handle] ?? null;
+                $queued_styles = $wp_styles && isset( $wp_styles->queue ) ? $wp_styles->queue : [];
+                foreach ( $queued_styles as $handle ) {
+                        $data = $wp_styles && isset( $wp_styles->registered[$handle] ) ? $wp_styles->registered[$handle] : null;
 			if ( $data && isset( $data->src ) && strpos( wp_normalize_path( $data->src ), "/{$this->slug}/" ) !== false ) {
 				$found[] = ['handle' => $handle, 'src' => $data->src];
 			}
