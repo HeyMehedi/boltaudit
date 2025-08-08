@@ -39,4 +39,4 @@ jobs:
         run: composer setup
 
       - name: Run PHPCS checks
-        run: php vendor/vendor-src/bin/phpcs --standard=phpcs.xml
+        run: composer phpcs
