@@ -202,63 +202,6 @@ class PostsRepository {
 		return self::$cached_post_types_orphans ?? [];
 	}
 
-	public static function get_suggestions() {
-		if ( null !== self::$cached_suggestions ) {
-			return self::$cached_suggestions;
-		}
-
-		$total_posts       = self::get_posts_count();
-		$post_types        = self::get_post_type_counts();
-		$revisions         = self::get_post_revisions_count();
-		$post_meta_total   = self::get_post_meta_count();
-		$post_meta_by_type = self::get_post_type_meta_counts();
-
-		$orphaned_post_meta_count = self::get_orphaned_post_meta_count();
-		$orphaned_posts_count     = self::get_orphaned_posts_count();
-
-		$suggestions = [];
-
-		if ( $revisions > 1000 ) {
-			$suggestions[] = "Woah, you have over 1,000 post revisions! Consider pruning revisions to boost performance.";
-		} elseif ( $revisions > 100 ) {
-			$suggestions[] = "You have quite a few post revisions. Cleanup could help reduce database size.";
-		}
-
-		if ( $post_meta_total > $total_posts * 20 ) {
-			$suggestions[] = "High post meta count compared to posts (more than 20 meta per post). Audit custom fields and metadata for cleanup or optimization.";
-		}
-
-		foreach ( $post_types as $type => $count ) {
-			$percentage = $total_posts > 0 ? ( $count / $total_posts ) * 100 : 0;
-			if ( $percentage > 80 ) {
-				$suggestions[] = "Over 80% of your posts are of type '{$type}'. Make sure this distribution matches your site’s needs.";
-			}
-			if ( ( $post_meta_by_type[$type] ?? 0 ) > $count * 50 ) {
-				$suggestions[] = "Post type '{$type}' has heavy meta usage (avg > 50 meta per post). Consider optimizing metadata.";
-			}
-		}
-
-		if ( isset( $post_types['draft'] ) && $post_types['draft'] > 500 ) {
-			$suggestions[] = "You have a large number of drafts ({$post_types['draft']}). Review and clean up unused drafts.";
-		}
-
-		if ( $orphaned_post_meta_count > 0 ) {
-			$suggestions[] = "You have {$orphaned_post_meta_count} orphaned post meta entries with no associated posts. Consider cleaning these up.";
-		}
-
-		if ( $orphaned_posts_count > 0 ) {
-			$suggestions[] = "You have {$orphaned_posts_count} posts with unregistered or invalid post types. Investigate and clean these.";
-		}
-
-		if ( empty( $suggestions ) ) {
-			$suggestions[] = "Your posts database looks clean and well-managed! Keep up the good work. 🌟";
-		}
-
-		self::$cached_suggestions = $suggestions;
-
-		return $suggestions;
-	}
-
 	public static function get_all() {
 		return [
 			'total_posts'         => self::get_posts_count(),
@@ -268,7 +211,6 @@ class PostsRepository {
 			'post_meta_total'     => self::get_post_meta_count(),
 			'post_meta_by_type'   => self::get_post_type_meta_counts(),
 			'percentages'         => self::get_percentage_breakdown(),
-			'suggestions'         => self::get_suggestions(),
 		];
 	}
 
