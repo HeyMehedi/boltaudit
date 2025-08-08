@@ -22,43 +22,47 @@ use BoltAudit\WpMVC\App;
 require_once __DIR__ . '/vendor/vendor-src/autoload.php';
 require_once __DIR__ . '/app/Helpers/helper.php';
 
-final class BoltAudit {
-	public static BoltAudit $instance;
+final class BoltAudit
+{
+    public static BoltAudit $instance;
 
-	public static function instance(): BoltAudit {
-		if ( empty( self::$instance ) ) {
-			self::$instance = new self;
-		}
+    public static function instance(): BoltAudit
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
-	public function load() {
-		register_activation_hook( __FILE__, [$this, 'on_activation'] );
+    public function load()
+    {
+        register_activation_hook(__FILE__, array( $this, 'on_activation' ));
 
-		$application = App::instance();
+        $application = App::instance();
 
-		$application->boot( __FILE__, __DIR__ );
+        $application->boot(__FILE__, __DIR__);
 
-		/**
-		 * Fires once activated plugins have loaded.
-		 *
-		 */
-		add_action(
-			'plugins_loaded', function () use ( $application ): void {
+        /**
+         * Fires once activated plugins have loaded.
+         */
+        add_action(
+            'plugins_loaded',
+            function () use ($application): void {
 
-				do_action( 'boltaudit_before_load' );
+                do_action('boltaudit_before_load');
 
-				$application->load();
+                $application->load();
 
-				do_action( 'boltaudit_after_load' );
-			}
-		);
-	}
+                do_action('boltaudit_after_load');
+            }
+        );
+    }
 
-	public function on_activation(): void {
-		new BoltAudit\App\Setup\Activation();
-	}
+    public function on_activation(): void
+    {
+        new BoltAudit\App\Setup\Activation();
+    }
 }
 
 BoltAudit::instance()->load();

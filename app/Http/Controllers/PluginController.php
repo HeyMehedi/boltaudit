@@ -1,5 +1,8 @@
 <?php
 
+defined( 'ABSPATH' ) || exit;
+
+
 namespace BoltAudit\App\Http\Controllers;
 
 use BoltAudit\App\Repositories\SinglePluginRepository;
@@ -8,30 +11,29 @@ use BoltAudit\WpMVC\Routing\Response;
 use Exception;
 use WP_REST_Request;
 
-class PluginController extends Controller {
+class PluginController extends Controller
+{
+    public function index(Validator $validator, WP_REST_Request $wp_rest_request)
+    {
+        $validator->validate(
+            array(
+                'slug' => 'string|required',
+            )
+        );
 
-	public function index( Validator $validator, WP_REST_Request $wp_rest_request ) {
-		$validator->validate(
-			[
-				'slug' => 'string|required',
-			]
-		);
+        $slug = trim((string) $wp_rest_request->get_param('slug'));
 
-		$slug = trim( (string) $wp_rest_request->get_param( 'slug' ) );
+        try {
+            $response = SinglePluginRepository::get_plugin_page_data($slug);
 
-		try {
-
-			$response = SinglePluginRepository::get_plugin_page_data( $slug );
-
-			return Response::send( $response );
-
-		} catch ( Exception $e ) {
-			return Response::send(
-				[
-					'message' => $e->getMessage(),
-				],
-				500
-			);
-		}
-	}
+            return Response::send($response);
+        } catch (Exception $e) {
+            return Response::send(
+                array(
+                    'message' => $e->getMessage(),
+                ),
+                500
+            );
+        }
+    }
 }

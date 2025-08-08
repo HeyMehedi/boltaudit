@@ -18,12 +18,19 @@
 			"vendor-src/bin/php-scoper add-prefix --config=dev-tools/scoper/index.php --output-dir vendor --force",
 			"composer dump-autoload -d vendor"
 		],
-		"format": "vendor/vendor-src/bin/phpcbf --standard=dev-tools/phpcs.xml",
-		"phpcs": "vendor/vendor-src/bin/phpcs --standard=dev-tools/phpcs.xml",
-		"permission": [
-			"chmod +x vendor/vendor-src/bin/phpcs",
-			"chmod +x vendor/vendor-src/bin/phpcbf"
-		]
+                "phpcs-config": "vendor-src/bin/phpcs --config-set installed_paths ../../phpcompatibility/php-compatibility,../../phpcompatibility/phpcompatibility-paragonie,../../phpcompatibility/phpcompatibility-wp,../../wp-coding-standards/wpcs,../../../CustomSniffs",
+                "format": [
+                        "@phpcs-config",
+                        "php vendor-src/bin/phpcbf --standard=phpcs.xml"
+                ],
+                "phpcs": [
+                        "@phpcs-config",
+                        "php vendor-src/bin/phpcs -n --standard=phpcs.xml"
+                ],
+                "permission": [
+                        "chmod +x vendor-src/bin/phpcs",
+                        "chmod +x vendor-src/bin/phpcbf"
+                ]
 	},
 	"autoload": {
 		"psr-4": {

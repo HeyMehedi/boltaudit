@@ -7,63 +7,63 @@ use BoltAudit\App\Providers\MenuServiceProvider;
 // use BoltAudit\Database\Migrations\TestMigration;
 use BoltAudit\WpMVC\Helpers\Helpers;
 
-return [
+return array(
     /**
      * The version of the plugin.
      */
-    'version'                     => Helpers::get_plugin_version( 'boltaudit' ),
+    'version'                     => Helpers::get_plugin_version('boltaudit'),
 
     /**
      * Configuration for the REST API.
      */
-    'rest_api'                    => [
+    'rest_api'                    => array(
         /**
          * The namespace for the REST API.
          */
         'namespace' => 'boltaudit',
-        
+
         /**
          * The versions of the REST API.
          */
-        'versions'  => []
-    ],
+        'versions'  => array(),
+    ),
 
     /**
      * Configuration for the AJAX API.
      */
-    'ajax_api'                    => [
+    'ajax_api'                    => array(
         /**
          * The namespace for the AJAX API.
          */
         'namespace' => 'boltaudit',
-        
+
         /**
          * The versions of the AJAX API.
          */
-        'versions'  => []
-    ],
+        'versions'  => array(),
+    ),
 
     /**
      * Service providers for the plugin.
      */
-    'providers'                   => [],
+    'providers'                   => array(),
 
     /**
      * Service providers for the admin area of the plugin.
      */
-    'admin_providers'             => [
+    'admin_providers'             => array(
         MenuServiceProvider::class,
-    ],
+    ),
 
     /**
      * Middleware configuration for the plugin.
      */
-    'middleware'                  => [
+    'middleware'                  => array(
         /**
          * Middleware for admin routes.
          */
-        'admin' => EnsureIsUserAdmin::class
-    ],
+        'admin' => EnsureIsUserAdmin::class,
+    ),
 
     /**
      * The database option key for storing migration information.
@@ -73,14 +73,14 @@ return [
     /**
      * List of migrations for the plugin.
      */
-    'migrations'                  => [
+    'migrations'                  => array(
         // 'test-migration' => TestMigration::class,
-    ],
+    ),
 
     /**
      * This configuration option defines a hook that will fire before executing the route callback,
      * such as before a controller action. It provides two parameters:
-     * 
+     *
      * @param WP_REST_Request $wp_rest_request The current REST request object.
      * @param string $full_route The full route being accessed.
      */
@@ -90,7 +90,7 @@ return [
      * Configuration for the REST API response filter hook.
      *
      * This filter hook allows overriding the entire REST API response.
-     * 
+     *
      * @param $response The response object from the controller.
      * @param WP_REST_Request  $wp_rest_request The request object.
      * @param string           $full_route The full route of the request.
@@ -99,10 +99,10 @@ return [
 
     /**
      * This filter hook that can override all REST API permissions.
-     * 
+     *
      * @param mixed $permission The current permission setting.
      * @param mixed $middleware The middleware being applied.
      * @param string $full_route The full route of the API endpoint.
      */
     'rest_permission_filter_hook' => 'boltaudit_rest_permission_filter',
-];
+);
