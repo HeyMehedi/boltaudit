@@ -1,7 +1,10 @@
 import ContentLoading from "@components/ContentLoading";
 import CountUp from "@components/CountUp";
 import postData from "@helper/postData";
+import ReactSVG from "react-inlinesvg";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "@wordpress/element";
+import arrowRightIcon from "@icon/arrow-right.svg";
 
 export default function DatabaseSection() {
   const [dataFetched, setDataFetched] = useState(false);
@@ -29,6 +32,16 @@ export default function DatabaseSection() {
       }, {})
     : null;
 
+  const emptyTables = dataFetched
+    ? allData.empty_tables.map((table) => ({
+        tableName: table.table_name || "unnamed",
+        rowCount: table.row_count || 0,
+        dataSize: table.data_size_formatted || 0,
+        indexSize: table.index_size_formatted || 0,
+        totalSize: table.total_size_formatted || 0,
+      }))
+    : [];
+
   return (
     <div id="ba-dashboard__database" className="ba-dashboard__content__section">
       <h4 className="ba-dashboard__content__section__title">
@@ -41,12 +54,15 @@ export default function DatabaseSection() {
         Easily find old data, unused tables, or options that might be making
         your site slower.
       </p>
-      {/* <a
-        href="#"
-        className="ba-dashboard__content__section__btn ba-dashboard__btn"
+      <Link
+        to="/database"
+        className="ba-dashboard__content__overview__btn ba-dashboard__btn"
       >
-        Security analytics documentation
-      </a> */}
+        <span className="bs-dashboard-tooltip">
+          Open Detailed Report {" "}
+          <ReactSVG src={arrowRightIcon} width={16} height={16} />
+        </span>
+      </Link>
       <div className="ba-dashboard__content__section__content">
         {dataFetched ? (
           <div className="ba-dashboard__content__section__overview">
@@ -70,15 +86,6 @@ export default function DatabaseSection() {
 
             <div className="ba-dashboard__content__section__overview__single">
               <span className="ba-dashboard__content__section__overview__title">
-                Empty Tables
-              </span>
-              <span className="ba-dashboard__content__section__overview__count">
-                <CountUp target={allData.total_empty_tables} />
-              </span>
-            </div>
-
-            <div className="ba-dashboard__content__section__overview__single">
-              <span className="ba-dashboard__content__section__overview__title">
                 Options
               </span>
               <span className="ba-dashboard__content__section__overview__count">
@@ -92,15 +99,6 @@ export default function DatabaseSection() {
               </span>
               <span className="ba-dashboard__content__section__overview__count">
                 <CountUp target={allData.options.total_transient} />
-              </span>
-            </div>
-
-            <div className="ba-dashboard__content__section__overview__single">
-              <span className="ba-dashboard__content__section__overview__title">
-                Autoloaded Options
-              </span>
-              <span className="ba-dashboard__content__section__overview__count">
-                <CountUp target={allData.options.total_autoloaded_options} />
               </span>
             </div>
           </div>
@@ -128,6 +126,36 @@ export default function DatabaseSection() {
                     <td>{value.dataSize}</td>
                     <td>{value.indexSize}</td>
                     <td>{value.totalSize}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <ContentLoading />
+          )}
+        </div>
+
+        <div className="ba-dashboard__content__section__data">
+          <h5>Empty Tables</h5>
+          {dataFetched ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Table Name</th>
+                  <th>Rows</th>
+                  <th>Data Size</th>
+                  <th>Index Size</th>
+                  <th>Total Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {emptyTables.map((table, index) => (
+                  <tr key={index}>
+                    <td>{table.tableName}</td>
+                    <td>{table.rowCount}</td>
+                    <td>{table.dataSize}</td>
+                    <td>{table.indexSize}</td>
+                    <td>{table.totalSize}</td>
                   </tr>
                 ))}
               </tbody>

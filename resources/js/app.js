@@ -4,9 +4,10 @@ import { applyFilters } from '@wordpress/hooks';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
-const HomePage = lazy( () => import( './pages/HomePage' ) );
-const PluginDetailsPage = lazy( () => import( './pages/PluginDetails' ) );
-const PostDetailsPage = lazy( () => import( './pages/PostDetails' ) );
+const HomePage = lazy(() => import("./pages/HomePage"));
+const PluginDetailsPage = lazy(() => import("./pages/PluginDetails"));
+const PostDetailsPage = lazy(() => import("./pages/PostDetails"));
+const DatabaseDetailsPage = lazy(() => import("./pages/DatabaseDetails"));
 const WooCommerceDetailsPage = lazy( () =>
 	import( './pages/WooCommerceDetails' )
 );
@@ -23,24 +24,28 @@ function App() {
 		setDataFetched( true );
 	}, 3000 );
 
-	const adminRoutes = applyFilters( 'ba_dashboard_routes', [
-		{
-			path: `/*`,
-			element: <HomePage />,
-		},
-		{
-			path: `/plugin/:slug`,
-			element: <PluginDetailsPage />,
-		},
-		{
-			path: `/posts`,
-			element: <PostDetailsPage />,
-		},
-		{
+  const adminRoutes = applyFilters("ba_dashboard_routes", [
+    {
+      path: `/*`,
+      element: <HomePage />,
+    },
+    {
+      path: `/plugin/:slug`,
+      element: <PluginDetailsPage />,
+    },
+    {
+      path: `/posts`,
+      element: <PostDetailsPage />,
+    },
+    {
+      path: `/database`,
+      element: <DatabaseDetailsPage />,
+    },
+    {
 			path: `/woocommerce`,
 			element: <WooCommerceDetailsPage />,
 		},
-	] );
+  ]);
 
 	const preloaderStyle = {
 		maxHeight: 'unset',

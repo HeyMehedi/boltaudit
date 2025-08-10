@@ -95,11 +95,11 @@ class DatabaseRepository {
 		return $summary;
 	}
 
-	public static function get_empty_tables() {
-		$tables = self::get_table_stats();
+        public static function get_empty_tables() {
+                $tables = self::get_table_stats();
 
-		return array_filter( $tables, fn( $table ) => (int) $table['row_count'] === 0 );
-	}
+                return array_values( array_filter( $tables, fn( $table ) => (int) $table['row_count'] === 0 ) );
+        }
 
 	public static function get_total_db_size() {
 		$tables = self::get_table_stats();
