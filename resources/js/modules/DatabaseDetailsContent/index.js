@@ -1,6 +1,16 @@
 import ContentLoading from "@components/ContentLoading";
 import CountUp from "@components/CountUp";
 
+const formatBytes = (bytes) => {
+  if (!bytes) {
+    return "0 B";
+  }
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"]; 
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+};
+
 export default function DatabaseDetailsModule({ data }) {
   if (!data) {
     return <ContentLoading />;
@@ -23,7 +33,8 @@ export default function DatabaseDetailsModule({ data }) {
           Database Summary
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          Detailed overview of your database size, tables and option usage.
+          Snapshot of your database health including size, table counts and
+          option usage.
         </p>
         <div className="ba-dashboard__content__section__overview">
           <div className="ba-dashboard__content__section__overview__single">
@@ -74,6 +85,22 @@ export default function DatabaseDetailsModule({ data }) {
               <CountUp target={data.options.total_autoloaded_options} />
             </span>
           </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Expired Transients
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              <CountUp target={data.options.total_expired_transients} />
+            </span>
+          </div>
+          <div className="ba-dashboard__content__section__overview__single">
+            <span className="ba-dashboard__content__section__overview__title">
+              Autoloaded Data Size
+            </span>
+            <span className="ba-dashboard__content__section__overview__count">
+              {formatBytes(data.options.total_autoloaded_size)}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -85,7 +112,7 @@ export default function DatabaseDetailsModule({ data }) {
           Tables by Size
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          All database tables sorted from largest to smallest.
+          Every table ordered from largest to smallest to spot storage hogs.
         </p>
         <div className="ba-dashboard__content__section__data">
           <table>
@@ -121,7 +148,7 @@ export default function DatabaseDetailsModule({ data }) {
           Empty Tables
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          Tables detected with zero rows.
+          Tables with no rows that may be removed or optimized.
         </p>
         <div className="ba-dashboard__content__section__data">
           {emptyTables.length > 0 ? (
@@ -155,7 +182,7 @@ export default function DatabaseDetailsModule({ data }) {
           Largest Autoloaded Options
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          Options loaded on every request ordered by size.
+          Autoloaded options consuming the most space, loaded on every request.
         </p>
         <div className="ba-dashboard__content__section__data">
           {heavyOptions.length > 0 ? (
@@ -163,14 +190,14 @@ export default function DatabaseDetailsModule({ data }) {
               <thead>
                 <tr>
                   <th>Option Name</th>
-                  <th>Size (bytes)</th>
+                  <th>Size</th>
                 </tr>
               </thead>
               <tbody>
                 {heavyOptions.map((opt) => (
                   <tr key={opt.option_name}>
                     <td>{opt.option_name}</td>
-                    <td>{opt.size}</td>
+                    <td>{formatBytes(opt.size)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -189,7 +216,7 @@ export default function DatabaseDetailsModule({ data }) {
           Index Efficiency
         </h4>
         <p className="ba-dashboard__content__section__desc">
-          Tables with the highest index to data ratio.
+          Highlights tables where indexes take up large space relative to data.
         </p>
         <div className="ba-dashboard__content__section__data">
           {indexStats.length > 0 ? (
@@ -206,8 +233,8 @@ export default function DatabaseDetailsModule({ data }) {
                 {indexStats.map((stat) => (
                   <tr key={stat.table}>
                     <td>{stat.table}</td>
-                    <td>{stat.data_size}</td>
-                    <td>{stat.index_size}</td>
+                    <td>{formatBytes(stat.data_size)}</td>
+                    <td>{formatBytes(stat.index_size)}</td>
                     <td>{stat.index_ratio}</td>
                   </tr>
                 ))}
