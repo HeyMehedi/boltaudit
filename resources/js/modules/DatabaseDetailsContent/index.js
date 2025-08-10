@@ -16,9 +16,9 @@ export default function DatabaseDetailsModule({ data }) {
     return <ContentLoading />;
   }
 
-  const tables = [...(data.tables || [])].sort(
-    (a, b) => b.total_size - a.total_size
-  );
+  const tables = [...(data.tables || [])]
+    .filter((t) => parseInt(t.row_count, 10) > 0)
+    .sort((a, b) => b.total_size - a.total_size);
   const emptyTables = data.empty_tables || [];
   const heavyOptions = data.heavy_autoloaded || [];
   const indexStats = data.index_efficiency || [];
