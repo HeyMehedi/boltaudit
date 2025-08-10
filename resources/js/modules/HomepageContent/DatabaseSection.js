@@ -32,6 +32,16 @@ export default function DatabaseSection() {
       }, {})
     : null;
 
+  const emptyTables = dataFetched
+    ? allData.empty_tables.map((table) => ({
+        tableName: table.table_name || "unnamed",
+        rowCount: table.row_count || 0,
+        dataSize: table.data_size_formatted || 0,
+        indexSize: table.index_size_formatted || 0,
+        totalSize: table.total_size_formatted || 0,
+      }))
+    : [];
+
   return (
     <div id="ba-dashboard__database" className="ba-dashboard__content__section">
       <h4 className="ba-dashboard__content__section__title">
@@ -116,6 +126,36 @@ export default function DatabaseSection() {
                     <td>{value.dataSize}</td>
                     <td>{value.indexSize}</td>
                     <td>{value.totalSize}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <ContentLoading />
+          )}
+        </div>
+
+        <div className="ba-dashboard__content__section__data">
+          <h5>Empty Tables</h5>
+          {dataFetched ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Table Name</th>
+                  <th>Rows</th>
+                  <th>Data Size</th>
+                  <th>Index Size</th>
+                  <th>Total Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {emptyTables.map((table, index) => (
+                  <tr key={index}>
+                    <td>{table.tableName}</td>
+                    <td>{table.rowCount}</td>
+                    <td>{table.dataSize}</td>
+                    <td>{table.indexSize}</td>
+                    <td>{table.totalSize}</td>
                   </tr>
                 ))}
               </tbody>
