@@ -7,6 +7,7 @@ import { ThemeProvider } from "styled-components";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const PluginDetailsPage = lazy(() => import("./pages/PluginDetails"));
 const PostDetailsPage = lazy(() => import("./pages/PostDetails"));
+const DatabaseDetailsPage = lazy(() => import("./pages/DatabaseDetails"));
 
 function App() {
   const [dir, setDir] = useState("ltr");
@@ -32,6 +33,10 @@ function App() {
     {
       path: `/posts`,
       element: <PostDetailsPage />,
+    },
+    {
+      path: `/database`,
+      element: <DatabaseDetailsPage />,
     },
   ]);
 

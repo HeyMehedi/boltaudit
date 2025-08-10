@@ -33,6 +33,29 @@ const Sidebar = (props) => {
             name: "Orphaned",
           },
         ]
+      : page === "databaseDetails"
+      ? [
+          {
+            id: "ba-dashboard__database_summary",
+            name: "Summary",
+          },
+          {
+            id: "ba-dashboard__database_tables",
+            name: "Tables",
+          },
+          {
+            id: "ba-dashboard__database_empty_tables",
+            name: "Empty",
+          },
+          {
+            id: "ba-dashboard__database_autoloaded_options",
+            name: "Autoloaded",
+          },
+          {
+            id: "ba-dashboard__database_index_efficiency",
+            name: "Index",
+          },
+        ]
       : [
           {
             id: "ba-dashboard__post",
