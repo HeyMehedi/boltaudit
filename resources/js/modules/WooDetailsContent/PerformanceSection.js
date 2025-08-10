@@ -1,43 +1,49 @@
 export default function PerformanceSection( { insights } ) {
 	const rows = [
-		{
-			label: 'HPOS Enabled',
-			description:
-				'Indicates if High Performance Order Storage feature is active.',
-			value: insights.hpos_enabled ? 'Yes' : 'No',
-		},
+               {
+                       label: 'HPOS Enabled',
+                       description:
+                               'Indicates if High Performance Order Storage feature is active.',
+                       value: insights.hpos_enabled ? '✅' : '❌',
+               },
 		{
 			label: 'Scheduled Actions',
 			description: 'Number of pending actions in ActionScheduler.',
 			value: insights.scheduled_actions,
 		},
-		{
-			label: 'High Product Variation Count',
-			description: 'Warns when product variations exceed 2,000.',
-			value: insights.high_variation_count ? 'Yes' : 'No',
-		},
-		{
-			label: 'Unused Product Tags',
-			description: 'Tags without any products attached.',
-			value: insights.unused_product_tags,
-		},
-		{
-			label: 'Woo Styles/JS on All Pages',
-			description:
-				'Checks if WooCommerce scripts and styles are enqueued globally.',
-			value: insights.styles_js_global ? 'Yes' : 'No',
-		},
-		{
-			label: 'Transients (wc_*)',
-			description: 'Count of WooCommerce transients in wp_options.',
-			value: insights.wc_transients,
-		},
-		{
-			label: 'Cart Fragments Sitewide',
-			description:
-				'Detects if wc-ajax=get_refreshed_fragments loads on every page, which hurts caching.',
-			value: insights.cart_fragments_sitewide ? 'Yes' : 'No',
-		},
+               {
+                       label: 'High Product Variation Count',
+                       description: 'Warns when product variations exceed 2,000.',
+                       value: insights.high_variation_count ? '⚠️' : '✅',
+               },
+               {
+                       label: 'Unused Product Tags',
+                       description: 'Tags without any products attached.',
+                       value:
+                               insights.unused_product_tags > 0
+                                       ? `${ insights.unused_product_tags } ⚠️`
+                                       : '✅',
+               },
+               {
+                       label: 'Woo Styles/JS on All Pages',
+                       description:
+                               'Checks if WooCommerce scripts and styles are enqueued globally.',
+                       value: insights.styles_js_global ? '❌' : '✅',
+               },
+               {
+                       label: 'Transients (wc_*)',
+                       description: 'Count of WooCommerce transients in wp_options.',
+                       value:
+                               insights.wc_transients > 0
+                                       ? `${ insights.wc_transients } ⚠️`
+                                       : '✅',
+               },
+               {
+                       label: 'Cart Fragments Sitewide',
+                       description:
+                               'Detects if wc-ajax=get_refreshed_fragments loads on every page, which hurts caching.',
+                       value: insights.cart_fragments_sitewide ? '❌' : '✅',
+               },
 	];
 
 	return (
