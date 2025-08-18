@@ -18,6 +18,7 @@ It inspects:
 - Unused, abandoned, or rarely-used plugins  
 - Heavy scripts, enqueued styles, database queries, and metadata  
 - Autoloaded options, transients, and custom DB tables  
+- Post details page with orphaned metadata and orphaned post records
 - Server environment and PHP configuration  
 
 Whether you're a developer, site owner, or agency, BoltAudit gives you visibility into bottlenecks with zero guesswork.
@@ -27,7 +28,7 @@ Whether you're a developer, site owner, or agency, BoltAudit gives you visibilit
 - Detect unused, outdated, or abandoned plugins  
 - Full Plugin Audit section: inactive, outdated, abandoned detection  
 - Plugin-level metrics: action/filter hook counts, cron job schedules, database query counts  
-- Breaks down post types, metadata, revisions, and orphaned content  
+- Breaks down post types, metadata, revisions, and orphaned types  
 - Analyzes option tables, autoloaded data, transients, and more  
 - Database snapshot with table sizes, row counts, autoload bloat
 - Server environment checks: PHP, MySQL, memory limits, upload size
@@ -69,6 +70,10 @@ Total DB size, number of tables (empty vs. used), autoloaded options, transients
 
 == Changelog ==
 
+= 0.0.7 – 2025-08-08 =  
+* Introduced Post Details page with orphaned metadata and orphaned post record reports  
+* Fixed environment “get user ID” issue to ensure accurate username  
+
 = 0.0.6 – 2025-07-30 =  
 * Introduced WooCommerce Performance Insights Section  
 * Added “Settings” link in the plugin page area for quicker navigation 
@@ -101,5 +106,5 @@ Total DB size, number of tables (empty vs. used), autoloaded options, transients
 
 == Upgrade Notice ==
 
-= 0.0.5 =  
-New asset impact and plugin-level metrics have been added for deeper insights. Caching and UI have been further optimized.
+= 0.0.7 =  
+Added a detailed Post Details page for orphan data insights and fixed environment user-ID retrieval.
