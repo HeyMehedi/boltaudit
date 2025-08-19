@@ -3,6 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use BoltAudit\WpMVC\App;
+use BoltAudit\App\Services\PostTypeTracker;
 
 /**
  * Plugin Name:       BoltAudit – Performance Audit Advisor
@@ -36,9 +37,11 @@ final class BoltAudit {
 	public function load() {
 		register_activation_hook( __FILE__, [$this, 'on_activation'] );
 
-		$application = App::instance();
+               $application = App::instance();
 
-		$application->boot( __FILE__, __DIR__ );
+               $application->boot( __FILE__, __DIR__ );
+
+               add_action( 'init', [PostTypeTracker::class, 'init'], 0 );
 
 		/**
 		 * Fires once activated plugins have loaded.
